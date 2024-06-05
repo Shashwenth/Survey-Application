@@ -43,6 +43,7 @@ public class Welcome {
 	    }
 	    User user = UserRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
 	    survey.setUser(user);
+	    survey.setStatus("active");
 	    Survey create = surveyRepository.save(survey);
 	    return ResponseEntity.ok(create);
 	}
@@ -90,6 +91,26 @@ public class Welcome {
 	@GetMapping(path = "/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
+        return ResponseEntity.ok(surveys);
+    }
+	
+	@PostMapping(path ="/updateSurveyStatus/{id}")
+	public ResponseEntity<Survey> updateStatus(@PathVariable Long id){
+		Survey survey=surveyRepository.findById(id).orElse(null);
+		survey.setStatus("Concluded");
+		Survey updatedSurvey = surveyRepository.save(survey);
+        return ResponseEntity.ok(updatedSurvey);
+	}
+	
+	@GetMapping("/userSurveys/{userId}/active")
+    public ResponseEntity<List<Survey>> getactive(@PathVariable Long userId) {
+        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
+        return ResponseEntity.ok(surveys);
+    }
+	
+	@GetMapping("/userSurveys/{userId}/history")
+    public ResponseEntity<List<Survey>> gethistory(@PathVariable Long userId) {
+        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
         return ResponseEntity.ok(surveys);
     }
 	

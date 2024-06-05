@@ -27,7 +27,6 @@ public class User {
 	@JsonManagedReference
 	private List<Survey> surveys;
 	
-	
 
 	public User() {
 		super();
@@ -72,7 +71,7 @@ public class User {
 	public void setSurveys(List<Survey> surveys) {
 		this.surveys = surveys;
 	}
-	
+
 	
 	
 }
