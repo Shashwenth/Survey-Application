@@ -1,5 +1,6 @@
 package com.SurveyRestAPI.FeedBack.Entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -24,6 +25,10 @@ public class Survey {
 	
 	private String status;
 	
+	private LocalDateTime startTime;
+	
+	private LocalDateTime endTime;
+	
 	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Question> questions;
@@ -37,12 +42,21 @@ public class Survey {
 		super();
 	}
 
-	public Survey(Long id, String name, List<Question> questions) {
+	
+
+	public Survey(Long id, String name, String status, LocalDateTime startTime, LocalDateTime endTime,
+			List<Question> questions, User user) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.status = status;
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.questions = questions;
+		this.user = user;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -82,6 +96,22 @@ public class Survey {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 	
 	

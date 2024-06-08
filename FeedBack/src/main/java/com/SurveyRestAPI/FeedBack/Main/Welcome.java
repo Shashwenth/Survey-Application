@@ -1,5 +1,6 @@
 package com.SurveyRestAPI.FeedBack.Main;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,14 @@ public class Welcome {
 	    }
 	    User user = UserRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
 	    survey.setUser(user);
-	    survey.setStatus("active");
+	    LocalDateTime now = LocalDateTime.now();
+	    if(survey.getStartTime().isBefore(now)) {
+	    	survey.setStatus("active");
+	    }
+	    if(survey.getStartTime().isAfter(now)) {
+	    	survey.setStatus("notStarted");
+	    }
+	    
 	    Survey create = surveyRepository.save(survey);
 	    return ResponseEntity.ok(create);
 	}
