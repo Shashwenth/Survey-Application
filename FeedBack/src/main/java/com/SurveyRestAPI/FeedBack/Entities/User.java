@@ -23,6 +23,8 @@ public class User {
 	
 	private String password;
 	
+	private String email;
+	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Survey> surveys;
@@ -32,11 +34,13 @@ public class User {
 		super();
 	}
 
-	public User(Long id, String username, String password, List<Survey> surveys) {
+
+	public User(Long id, String username, String password, String email, List<Survey> surveys) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.email = email;
 		this.surveys = surveys;
 	}
 
@@ -70,6 +74,16 @@ public class User {
 
 	public void setSurveys(List<Survey> surveys) {
 		this.surveys = surveys;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
