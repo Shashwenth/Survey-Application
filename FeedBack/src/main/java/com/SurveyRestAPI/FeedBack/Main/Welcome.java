@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SurveyRestAPI.FeedBack.Entities.Answer;
+import com.SurveyRestAPI.FeedBack.Entities.Answer_OP;
 import com.SurveyRestAPI.FeedBack.Entities.Option;
 import com.SurveyRestAPI.FeedBack.Entities.Question;
 import com.SurveyRestAPI.FeedBack.Entities.Survey;
 import com.SurveyRestAPI.FeedBack.Entities.User;
+import com.SurveyRestAPI.FeedBack.Repositories.Answer_OPRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.Answerrepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
@@ -36,6 +38,9 @@ public class Welcome {
     
     @Autowired
     private Answerrepository answerRepository;
+    
+    @Autowired
+    private Answer_OPRepository answerOpRepository;
     
     @GetMapping(path="/")
     public String welcome() {
@@ -150,14 +155,28 @@ public class Welcome {
             
             ans.setQuestion(question);
             ans.setSurvey(survey);
+            
+            
+            Answer_OP answerOP=new Answer_OP();
+            
+            answerOP.setQuestion(question.getText());
+            answerOP.setAnswer(ans.getAnswer());
+            
+            answerOP.setQuestion_id(question.getId());
+            answerOP.setSurveyId(question.getSurvey().getId());
+            
+            
+            
             answerRepository.save(ans);
+            answerOP.setAnswer_id(ans.getId());
+            answerOpRepository.save(answerOP);
         }
         return ResponseEntity.ok("Answers submitted successfully");
     }
     
     @GetMapping("/survey/{surveyId}/answers")
-    public ResponseEntity<List<Answer>> getAnswersBySurvey(@PathVariable Long surveyId) {
-        List<Answer> answers = answerRepository.findBySurveyId(surveyId);
+    public ResponseEntity<List<Answer_OP>> getAnswersBySurvey(@PathVariable Long surveyId) {
+        List<Answer_OP> answers = answerOpRepository.findBysurveyId(surveyId);
         if (answers.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
