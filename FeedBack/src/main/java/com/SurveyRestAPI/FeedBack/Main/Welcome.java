@@ -12,135 +12,156 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SurveyRestAPI.FeedBack.Entities.Answer;
 import com.SurveyRestAPI.FeedBack.Entities.Option;
 import com.SurveyRestAPI.FeedBack.Entities.Question;
 import com.SurveyRestAPI.FeedBack.Entities.Survey;
 import com.SurveyRestAPI.FeedBack.Entities.User;
+import com.SurveyRestAPI.FeedBack.Repositories.Answerrepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
 
 @RestController
 public class Welcome {
-	
-	@Autowired
-	private SurveyRepository surveyRepository;
-	
-	@Autowired
-	private QuestionRepository questionRepository;
-	
-	@Autowired
-	private UserRepository UserRepository;
-	
-	@GetMapping(path="/")
-	public String welcome() {
-		return "Hi Shash";
-	}
-	
-	@PostMapping(path="/addSurvey")
-	public ResponseEntity<Survey> addSurvey(@RequestParam Long userId, @RequestBody Survey survey){
-	    if (userId == null) {
-	        return ResponseEntity.badRequest().body(null);
-	    }
-	    User user = UserRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
-	    survey.setUser(user);
-	    LocalDateTime now = LocalDateTime.now();
-	    if(survey.getStartTime().isBefore(now)) {
-	    	survey.setStatus("active");
-	    }
-	    if(survey.getStartTime().isAfter(now)) {
-	    	survey.setStatus("notStarted");
-	    }
-	    
-	    Survey create = surveyRepository.save(survey);
-	    return ResponseEntity.ok(create);
-	}
+    
+    @Autowired
+    private SurveyRepository surveyRepository;
+    
+    @Autowired
+    private QuestionRepository questionRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private Answerrepository answerRepository;
+    
+    @GetMapping(path="/")
+    public String welcome() {
+        return "Hi Shash";
+    }
+    
+    @PostMapping(path="/addSurvey")
+    public ResponseEntity<Survey> addSurvey(@RequestParam Long userId, @RequestBody Survey survey){
+        if (userId == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+        survey.setUser(user);
+        LocalDateTime now = LocalDateTime.now();
+        if(survey.getStartTime().isBefore(now)) {
+            survey.setStatus("active");
+        }
+        if(survey.getStartTime().isAfter(now)) {
+            survey.setStatus("notStarted");
+        }
+        
+        Survey create = surveyRepository.save(survey);
+        return ResponseEntity.ok(create);
+    }
 
-	
-	@GetMapping(path="/getSurveyId/{id}")
-	public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
-		Survey survey=surveyRepository.findById(id).orElse(null);
-		if(survey!=null) {
-			return ResponseEntity.ok(survey);
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
-	}
-	
-	@PostMapping(path="/addQuestion/{id}")
-	public ResponseEntity<Question> addQuestion(@PathVariable Long id,@RequestBody Question question){
-		Survey survey=surveyRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid survey Id:" + id));
-		question.setSurvey(survey);
-		if("checkbox".equals(question.getType())) {
-			List<Option> options=question.getOptions();
-			if(options!=null) {
-				for(Option o:options) {
-					o.setQuestion(question);
-				}
-			}
-		}
-		Question create=questionRepository.save(question);
-		return ResponseEntity.ok(create);
-	}
-	
-	@GetMapping(path="/getQuestion/{id}")
-	public ResponseEntity<List<Question>> getQuestions(@PathVariable Long id){
-		Survey survey=surveyRepository.findById(id).orElse(null);
-		return ResponseEntity.ok(survey.getQuestions());
-	}
-	
-	@GetMapping(path = "/usersurveys/{id}")
+    @GetMapping(path="/getSurveyId/{id}")
+    public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
+        Survey survey=surveyRepository.findById(id).orElse(null);
+        if(survey!=null) {
+            return ResponseEntity.ok(survey);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PostMapping(path="/addQuestion/{id}")
+    public ResponseEntity<Question> addQuestion(@PathVariable Long id,@RequestBody Question question){
+        Survey survey=surveyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid survey Id:" + id));
+        question.setSurvey(survey);
+        if("checkbox".equals(question.getType())) {
+            List<Option> options=question.getOptions();
+            if(options!=null) {
+                for(Option o:options) {
+                    o.setQuestion(question);
+                }
+            }
+        }
+        Question create=questionRepository.save(question);
+        return ResponseEntity.ok(create);
+    }
+    
+    @GetMapping(path="/getQuestion/{id}")
+    public ResponseEntity<List<Question>> getQuestions(@PathVariable Long id){
+        Survey survey=surveyRepository.findById(id).orElse(null);
+        return ResponseEntity.ok(survey.getQuestions());
+    }
+    
+    @GetMapping(path = "/usersurveys/{id}")
     public ResponseEntity<List<Survey>> getAllSurveys(@PathVariable Long id) {
-		List<Survey> surveys = UserRepository.findById(id).get().getSurveys();
+        List<Survey> surveys = userRepository.findById(id).get().getSurveys();
         return ResponseEntity.ok(surveys);
     }
-	
-	@GetMapping(path = "/surveys")
+    
+    @GetMapping(path = "/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
         return ResponseEntity.ok(surveys);
     }
-	
-	@PostMapping(path ="/updateSurveyStatus/{id}")
-	public ResponseEntity<Survey> updateStatus(@PathVariable Long id){
-		Survey survey=surveyRepository.findById(id).orElse(null);
-		survey.setStatus("Concluded");
-		Survey updatedSurvey = surveyRepository.save(survey);
+    
+    @PostMapping(path ="/updateSurveyStatus/{id}")
+    public ResponseEntity<Survey> updateStatus(@PathVariable Long id){
+        Survey survey=surveyRepository.findById(id).orElse(null);
+        survey.setStatus("Concluded");
+        Survey updatedSurvey = surveyRepository.save(survey);
         return ResponseEntity.ok(updatedSurvey);
-	}
-	
-	@GetMapping("/userSurveys/{userId}/active")
-    public ResponseEntity<List<Survey>> getactive(@PathVariable Long userId) {
+    }
+    
+    @GetMapping("/userSurveys/{userId}/active")
+    public ResponseEntity<List<Survey>> getActive(@PathVariable Long userId) {
         List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
         return ResponseEntity.ok(surveys);
     }
-	
-	@GetMapping("/userSurveys/{userId}/history")
-    public ResponseEntity<List<Survey>> gethistory(@PathVariable Long userId) {
+    
+    @GetMapping("/userSurveys/{userId}/history")
+    public ResponseEntity<List<Survey>> getHistory(@PathVariable Long userId) {
         List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
         return ResponseEntity.ok(surveys);
     }
-	
-	@PostMapping(path="/signup")
-	public ResponseEntity<User> addUser(@RequestBody User user){
-		User create=UserRepository.save(user);
-		return ResponseEntity.ok(create);
-	}
-	
-	@PostMapping("/login")
+    
+    @PostMapping(path="/signup")
+    public ResponseEntity<User> addUser(@RequestBody User user){
+        User create=userRepository.save(user);
+        return ResponseEntity.ok(create);
+    }
+    
+    @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody User user) {
-        User foundUser = UserRepository.findByUsername(user.getUsername());
+        User foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
             return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(401).body(null);
         }
     }
-	
-	
-	
-	
-	
-
+    
+    @PostMapping("/addAnswer")
+    public ResponseEntity<String> addAnswer(@RequestBody List<Answer> answers){
+        for(Answer ans : answers) {
+            Question question = questionRepository.findById(ans.getQuestion().getId()).orElse(null);
+            Survey survey=surveyRepository.findById(ans.getSurvey().getId()).orElse(null);
+            
+            ans.setQuestion(question);
+            ans.setSurvey(survey);
+            answerRepository.save(ans);
+        }
+        return ResponseEntity.ok("Answers submitted successfully");
+    }
+    
+    @GetMapping("/survey/{surveyId}/answers")
+    public ResponseEntity<List<Answer>> getAnswersBySurvey(@PathVariable Long surveyId) {
+        List<Answer> answers = answerRepository.findBySurveyId(surveyId);
+        if (answers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(answers);
+        }
+    }
 }
