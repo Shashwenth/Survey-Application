@@ -25,17 +25,22 @@ public class Answer {
     @ManyToOne
     @JoinColumn(name="survey_id")
     private Survey survey;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
     
     public Answer() {
         super();
     }
 
-    public Answer(Long id, String answer, Question question, Survey survey) {
+    public Answer(Long id, String answer, Question question, Survey survey, User user) {
         super();
         this.id = id;
         this.answer = answer;
         this.question = question;
         this.survey = survey;
+        this.user = user;
     }
 
     public Long getId() {
@@ -68,5 +73,13 @@ public class Answer {
 
     public void setSurvey(Survey survey) {
         this.survey = survey;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

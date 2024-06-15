@@ -21,8 +21,10 @@ public class Answer_OP {
 	private String answer;
 
 	private Long surveyId;
+	
+	private Long user_id;
 
-	public Answer_OP(Long id, Long question_id, Long answer_id, String question, String answer, Long surveyId) {
+	public Answer_OP(Long id, Long question_id, Long answer_id, String question, String answer, Long surveyId, Long user_id) {
 		super();
 		this.id = id;
 		this.question_id = question_id;
@@ -30,6 +32,7 @@ public class Answer_OP {
 		this.question = question;
 		this.answer = answer;
 		this.surveyId = surveyId;
+		this.user_id=user_id;
 	}
 	
 	
@@ -88,6 +91,13 @@ public class Answer_OP {
 		this.surveyId = surveyId;
 	}
 	
+	public Long getuser_id() {
+		return user_id;
+	}
+
+	public void setuser_id(Long user_id) {
+		this.user_id = user_id;
+	}
 	
 }
 	
