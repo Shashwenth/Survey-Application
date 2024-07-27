@@ -1,11 +1,11 @@
 // src/Components/SignUp.js
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -13,6 +13,7 @@ const SignUp = () => {
             alert('User registered successfully');
             setUsername('');
             setPassword('');
+            navigate(`/login`);
         } catch (error) {
             console.error('There was an error registering the user!', error);
         }
