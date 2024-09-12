@@ -1,0 +1,6 @@
+2024-09-11 23:42:01.701435-04:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]ANSWER"; expected "ALTER, ANALYZE"; SQL statement:
+ANSWER [42001-224]
+2024-09-11 23:42:15.173781-04:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]ANSWER_OP"; expected "ALTER, ANALYZE"; SQL statement:
+ANSWER_OP [42001-224]
