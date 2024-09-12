@@ -31,14 +31,15 @@ const ShowFeedbackForm = () => {
                                 <label>{question.text}</label>
                                 {question.type === 'text' ? (
                                     <input type="text" />
-                                ) : (
+                                ) : question.type === 'checkbox' ? (
                                     question.options.map((option, index) => (
                                         <div key={index}>
                                             <input type="checkbox" id={option.id} name={question.text} value={option.value} />
                                             <label htmlFor={option.id}>{option.value}</label>
                                         </div>
                                     ))
-                                )}
+                                ) : <br></br>
+                            }
                             </div>
                         ))}
                     </form>

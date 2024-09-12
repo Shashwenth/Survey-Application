@@ -51,6 +51,7 @@ const AddQuestions = () => {
                     <select value={type} onChange={(e) => setType(e.target.value)} required>
                         <option value="text">Text</option>
                         <option value="checkbox">Checkbox</option>
+                        <option value="content">Content</option>
                     </select>
                 </div>
                 {type === 'checkbox' && (
