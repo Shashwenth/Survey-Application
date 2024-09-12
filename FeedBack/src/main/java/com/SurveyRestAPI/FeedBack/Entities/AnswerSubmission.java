@@ -1,6 +1,6 @@
 package com.SurveyRestAPI.FeedBack.Entities;
 
-import java.util.HashMap;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -12,46 +12,46 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Answer {
-    
+public class AnswerSubmission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private HashMap<String,String> answer_Storage=new HashMap<>();
-    
+
     private String answer;
-    
+
+    private String isOption;
+
+    private List<Long> option;
+
     @ManyToOne
-    @JoinColumn(name="question_id")
+    @JoinColumn(name = "question_id")
+    @JsonBackReference
     private Question question;
-    
+
     @ManyToOne
-    @JoinColumn(name="survey_id")
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
-    
-    public Answer() {
+
+    public AnswerSubmission() {
         super();
     }
-    
-    
-    
-	public Answer(Long id, HashMap<String, String> answer_Storage, String answer, Question question, Survey survey,
-			User user) {
+
+	public AnswerSubmission(Long id, String answer, String isOption, List<Long> option, Question question,
+			Survey survey, User user) {
 		super();
 		this.id = id;
-		this.answer_Storage = answer_Storage;
 		this.answer = answer;
+		this.isOption = isOption;
+		this.option = option;
 		this.question = question;
 		this.survey = survey;
 		this.user = user;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -61,20 +61,28 @@ public class Answer {
 		this.id = id;
 	}
 
-	public HashMap<String, String> getAnswer_Storage() {
-		return answer_Storage;
-	}
-
-	public void setAnswer_Storage(HashMap<String, String> answer_Storage) {
-		this.answer_Storage = answer_Storage;
-	}
-
 	public String getAnswer() {
 		return answer;
 	}
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public String getIsOption() {
+		return isOption;
+	}
+
+	public void setIsOption(String isOption) {
+		this.isOption = isOption;
+	}
+
+	public List<Long> getOption() {
+		return option;
+	}
+
+	public void setOption(List<Long> option) {
+		this.option = option;
 	}
 
 	public Question getQuestion() {
@@ -100,6 +108,7 @@ public class Answer {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
     
+    
+
 }

@@ -32,6 +32,14 @@ const SurveyList = () => {
         navigate(`/feedback-form/${surveyId}`);
     };
 
+    const RespondQuestions = (surveyId) => {
+        navigate(`/Respond/${surveyId}`);
+    };
+
+    const ShowAnswers = (surveyId) => {
+        navigate(`/list-answer/${surveyId}`);
+    };
+
     return (
         <div className='container-fluid p-0'>
             <div className='p-3' style={{ backgroundColor: 'pink' }}>
@@ -50,6 +58,8 @@ const SurveyList = () => {
                                 <td>
                                     <button className="btn btn-primary m-2" onClick={() => handleAddQuestions(survey.id)}>Add Questions</button>
                                     <button className="btn btn-warning m-2" onClick={() => handleShowQuestions(survey.id)}>Show Questions</button>
+                                    <button className="btn btn-secondary m-2" onClick={() => RespondQuestions(survey.id)}>Answer Question</button>
+                                    <button className="btn btn-secondary m-2" onClick={() => ShowAnswers(survey.id)}>Show ANswers</button>
                                 </td>
                             </tr>
                         ))}

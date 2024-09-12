@@ -9,6 +9,8 @@ import SignUp from './Components/SignUp';
 import Login from './Components/Login';
 import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
+import AddResponse from './Components/AddResponse'
+import ListResponses from './Components/ListResponses'
 import AuthProvider, { AuthContext } from './Context/AuthContext';
 
 const App = () => {
@@ -23,6 +25,8 @@ const App = () => {
                                 <Route path="/add-survey" element={<PrivateRoute><AddSurvey /></PrivateRoute>} />
                                 <Route path="/add-questions/:surveyId" element={<PrivateRoute><AddQuestions /></PrivateRoute>} />
                                 <Route path="/feedback-form/:surveyId" element={<PrivateRoute><ShowFeedbackForm /></PrivateRoute>} />
+                                <Route path="/Respond/:surveyId" element={<PrivateRoute><AddResponse /></PrivateRoute>} />
+                                <Route path="/list-answer/:surveyId" element={<PrivateRoute><ListResponses /></PrivateRoute>} />
                                 <Route path="/signup" element={<SignUp />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/" element={<PrivateRoute><SurveyList /></PrivateRoute>} />

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SurveyRestAPI.FeedBack.Entities.Answer;
+import com.SurveyRestAPI.FeedBack.Entities.AnswerSubmission;
 import com.SurveyRestAPI.FeedBack.Entities.Answer_OP;
 import com.SurveyRestAPI.FeedBack.Entities.Option;
 import com.SurveyRestAPI.FeedBack.Entities.Question;
@@ -20,6 +21,7 @@ import com.SurveyRestAPI.FeedBack.Entities.Survey;
 import com.SurveyRestAPI.FeedBack.Entities.User;
 import com.SurveyRestAPI.FeedBack.Repositories.Answer_OPRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.Answerrepository;
+import com.SurveyRestAPI.FeedBack.Repositories.OptionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
@@ -41,6 +43,9 @@ public class Welcome {
     
     @Autowired
     private Answer_OPRepository answerOpRepository;
+    
+    @Autowired
+    private OptionRepository optionRepository;
     
     @GetMapping(path="/")
     public String welcome() {
@@ -91,6 +96,68 @@ public class Welcome {
         }
         Question create=questionRepository.save(question);
         return ResponseEntity.ok(create);
+    }
+    
+    
+    @PostMapping(path = "/submitResponse/{surveyId}")
+    public ResponseEntity<String> submitResponse(
+        @PathVariable Long surveyId,
+        @RequestParam Long userId,
+        @RequestBody List<AnswerSubmission> answers) {
+
+        // Fetch the survey and user from the database
+        Survey survey = surveyRepository.findById(surveyId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid survey Id:" + surveyId));
+        System.out.println(survey.getName());
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+        System.out.println(user.getUsername());
+
+        // Loop through each answer submission
+        for (AnswerSubmission answerSubmission : answers) {
+            // Fetch the corresponding question from the database
+            Question question = questionRepository.findById(answerSubmission.getQuestion().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid question Id:" + answerSubmission.getQuestion().getId()));
+
+            // Create and populate the Answer entity
+            Answer answer = new Answer();
+            answer.setSurvey(survey);
+            answer.setQuestion(question);
+            answer.setUser(user);
+
+            // Check if the submission is an option or a text-based answer
+            if (answerSubmission.getIsOption().equals("true")) {
+                // If it's an option, find the option by ID and set the answer
+                Option option = optionRepository.findById(answerSubmission.getOption().get(0))
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + answerSubmission.getOption().get(0)));
+                answer.getAnswer_Storage().put("true", String.valueOf(option.getValue()));
+                answer.setAnswer(option.getValue()); // Set the option value as the answer text
+            } else {
+                // If it's a text-based answer, set the text directly
+            	answer.getAnswer_Storage().put("false", answerSubmission.getAnswer());
+                answer.setAnswer(answerSubmission.getAnswer());
+            }
+
+            // Save the answer to the repository
+            answerRepository.save(answer);
+
+            // Also save the answer to the Answer_OP repository for logging
+            Answer_OP answerOP = new Answer_OP();
+            answerOP.setQuestion(question.getText());
+            answerOP.setAnswer(answer.getAnswer());
+            answerOP.setQuestion_id(question.getId());
+            answerOP.setSurveyId(surveyId);
+            answerOP.setuser_id(userId);
+            answerOP.setAnswer_id(answer.getId());
+            answerOpRepository.save(answerOP);
+        }
+
+        return ResponseEntity.ok("Responses submitted successfully");
+    }
+
+    @GetMapping(path="getResponses/{id}")
+    public List<Answer> getResponses(@PathVariable Long id){
+    	return answerRepository.findBySurveyId(id);
     }
     
     @GetMapping(path="/getQuestion/{id}")
@@ -146,6 +213,8 @@ public class Welcome {
             return ResponseEntity.status(401).body(null);
         }
     }
+    
+    
     
     @PostMapping("/addAnswer")
     public ResponseEntity<String> addAnswer(@RequestParam  Long id , @RequestBody List<Answer> answers){
