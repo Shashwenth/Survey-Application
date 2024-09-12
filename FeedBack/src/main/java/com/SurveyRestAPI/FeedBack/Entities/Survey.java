@@ -25,6 +25,10 @@ public class Survey {
 	
 	private String status;
 	
+	public String uniqueId;
+	
+	private String access;
+	
 	private LocalDateTime startTime;
 	
 	private LocalDateTime endTime;
@@ -43,6 +47,7 @@ public class Survey {
 	}
 
 	
+	
 
 	public Survey(Long id, String name, String status, LocalDateTime startTime, LocalDateTime endTime,
 			List<Question> questions, User user) {
@@ -56,7 +61,8 @@ public class Survey {
 		this.user = user;
 	}
 
-
+	
+	
 
 	public Long getId() {
 		return id;
@@ -112,6 +118,23 @@ public class Survey {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getAccess() {
+		return access;
+	}
+
+
+	public void setAccess(String access) {
+		this.access = access;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 	
 	

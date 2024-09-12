@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddResponse() {
   const { surveyId } = useParams();
   const [survey, setSurvey] = useState(null);
   const [responses, setResponses] = useState({});
   const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSurveyData = async () => {
@@ -77,6 +79,9 @@ export default function AddResponse() {
         }
       });
       console.log('Response submitted successfully!');
+      alert("successfully submitted")
+      navigate(`/`);
+
     } catch (error) {
       console.error('There was an error submitting the response!', error);
     }

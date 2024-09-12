@@ -18,6 +18,9 @@ const Navbar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/add-survey">Add Survey</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/enter-survey">Enter Survey</Link>
+                        </li>
                     </ul>
                 </div>
             </div>

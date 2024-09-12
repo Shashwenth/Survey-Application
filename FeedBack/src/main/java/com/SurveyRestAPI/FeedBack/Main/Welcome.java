@@ -25,6 +25,7 @@ import com.SurveyRestAPI.FeedBack.Repositories.OptionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
+import com.SurveyRestAPI.FeedBack.Repositories.Service.GenerateSurveyId;
 
 @RestController
 public class Welcome {
@@ -47,6 +48,9 @@ public class Welcome {
     @Autowired
     private OptionRepository optionRepository;
     
+    @Autowired
+    private GenerateSurveyId generateSurveyId;
+    
     @GetMapping(path="/")
     public String welcome() {
         return "Hi Shash";
@@ -66,7 +70,7 @@ public class Welcome {
         if(survey.getStartTime().isAfter(now)) {
             survey.setStatus("notStarted");
         }
-        
+        survey.setUniqueId(generateSurveyId.generateRandomString(10));
         Survey create = surveyRepository.save(survey);
         return ResponseEntity.ok(create);
     }
@@ -74,6 +78,7 @@ public class Welcome {
 
     @GetMapping(path="/getSurveyId/{id}")
     public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
+    	System.out.println();
         Survey survey=surveyRepository.findById(id).orElse(null);
         if(survey!=null) {
             return ResponseEntity.ok(survey);
@@ -159,6 +164,11 @@ public class Welcome {
     @GetMapping(path="getResponses/{id}")
     public List<Answer> getResponses(@PathVariable Long id){
     	return answerRepository.findBySurveyId(id);
+    }
+    
+    @GetMapping(path="getSurveyUniqueId/{id}")
+    public String getSurveyUniqueIdentifier(@PathVariable Long id) {
+    	return surveyRepository.findById(id).get().getUniqueId();
     }
     
     @GetMapping(path="/getQuestion/{id}")

@@ -6,6 +6,7 @@ const AddSurvey = () => {
     const [name, setName] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+    const [access, setAccess] = useState('');
     const { auth } = useContext(AuthContext);
 
     const handleSubmit = async (event) => {
@@ -24,9 +25,12 @@ const AddSurvey = () => {
         // Create the survey object to send to the backend
         const survey = { 
             name, 
+            access,
             startTime, 
             endTime 
         };
+
+        console.log(survey);
 
         try {
             const response = await axios.post(`http://localhost:8080/addSurvey?userId=${auth.user.id}`, survey);
@@ -34,6 +38,7 @@ const AddSurvey = () => {
             setName('');
             setStartTime('');
             setEndTime('');
+            setAccess('');
         } catch (error) {
             console.error('There was an error adding the survey!', error);
         }
@@ -67,6 +72,14 @@ const AddSurvey = () => {
                     onChange={(e) => setEndTime(e.target.value)} 
                     required 
                 />
+            </div>
+            <div>
+                <label>Manage Acess</label>
+                <select value={access} onChange={(e) => setAccess(e.target.value)} required>
+                        <option value="Public">Select</option>
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                    </select>
             </div>
             <button type="submit">Add Survey</button>
         </form>
