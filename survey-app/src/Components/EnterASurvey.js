@@ -17,13 +17,23 @@ const EnterSurvey = () => {
             return;
         }
         try {
-            const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+
+            const checkResponseEntry = await axios.get(`http://localhost:8080/searchAnswers/${surveyId}/userId=${auth.user.id}`);
+            if(checkResponseEntry){
+                alert("You Have Already Responded to The Survey. Sorry we do nor have editing feature currently!");
+                navigate(`/`);
+            }
+            else{
+                const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+
             if(response.data.access==="Public"){
                 navigate(`/Respond/${surveyId}`);
             }
             else{
                 navigate(`/AuthorizeAccess/${surveyId}`);
             }
+            }
+            
         } catch (error) {
             console.error('There was an error Getting the survey!', error);
         }

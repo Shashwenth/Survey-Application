@@ -227,25 +227,10 @@ public class Welcome {
     
     
     
-    @PostMapping("/addAnswer")
-    public ResponseEntity<String> addAnswer(@RequestParam  Long id , @RequestBody List<Answer> answers){
-        for(Answer ans : answers) {
-            Question question = questionRepository.findById(ans.getQuestion().getId()).orElse(null);
-            Survey survey=surveyRepository.findById(ans.getSurvey().getId()).orElse(null);
-            ans.setQuestion(question);
-            ans.setSurvey(survey);
-            ans.setUser(userRepository.findById(id).orElse(null));
-            Answer_OP answerOP=new Answer_OP();
-            answerOP.setQuestion(question.getText());
-            answerOP.setAnswer(ans.getAnswer());
-            answerOP.setQuestion_id(question.getId());
-            answerOP.setSurveyId(question.getSurvey().getId());
-            answerOP.setuser_id(id);
-            answerRepository.save(ans);
-            answerOP.setAnswer_id(ans.getId());
-            answerOpRepository.save(answerOP);
-        }
-        return ResponseEntity.ok("Answers submitted successfully");
+    @GetMapping(path="/searchAnswers/{surveyId}")
+    public boolean searchAnswerForUser(@PathVariable Long surveyId, @RequestParam Long userId) {
+    	List<Answer> answer_set=answerRepository.findBySurveyIdAndUserId(surveyId, userId);
+    	return !answer_set.isEmpty();
     }
     
     @GetMapping("/survey/{surveyId}/answers")

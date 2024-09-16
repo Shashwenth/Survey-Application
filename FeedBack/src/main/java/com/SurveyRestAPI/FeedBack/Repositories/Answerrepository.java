@@ -8,4 +8,5 @@ import com.SurveyRestAPI.FeedBack.Entities.Answer;
 
 public interface Answerrepository extends JpaRepository<Answer, Long>{
 	List<Answer> findBySurveyId(Long surveyId);
+	List<Answer> findBySurveyIdAndUserId(Long surveyId, Long userId);
 }
