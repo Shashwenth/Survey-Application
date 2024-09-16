@@ -60,3 +60,9 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 50 more
+2024-09-15 23:06:59.004431-04:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM SURVEY ,[*]"; expected "identifier"; SQL statement:
+SELECT * FROM SURVEY , [42001-224]
+2024-09-15 23:07:00.375615-04:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM SURVEY ,[*]"; expected "identifier"; SQL statement:
+SELECT * FROM SURVEY , [42001-224]
