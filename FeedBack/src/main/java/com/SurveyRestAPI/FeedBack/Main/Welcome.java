@@ -74,8 +74,7 @@ public class Welcome {
         Survey create = surveyRepository.save(survey);
         return ResponseEntity.ok(create);
     }
-    //This is in Dev Branch
-
+    
     @GetMapping(path="/getSurveyId/{id}")
     public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
     	System.out.println();
@@ -111,7 +110,7 @@ public class Welcome {
         @RequestParam Long userId,
         @RequestBody List<AnswerSubmission> answers) {
 
-        // Fetch the survey and user from the database
+    	
         Survey survey = surveyRepository.findById(surveyId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid survey Id:" + surveyId));
         System.out.println(survey.getName());
@@ -119,35 +118,27 @@ public class Welcome {
             .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         System.out.println(user.getUsername());
 
-        // Loop through each answer submission
         for (AnswerSubmission answerSubmission : answers) {
-            // Fetch the corresponding question from the database
             Question question = questionRepository.findById(answerSubmission.getQuestion().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid question Id:" + answerSubmission.getQuestion().getId()));
 
-            // Create and populate the Answer entity
             Answer answer = new Answer();
             answer.setSurvey(survey);
             answer.setQuestion(question);
             answer.setUser(user);
 
-            // Check if the submission is an option or a text-based answer
             if (answerSubmission.getIsOption().equals("true")) {
-                // If it's an option, find the option by ID and set the answer
                 Option option = optionRepository.findById(answerSubmission.getOption().get(0))
                     .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + answerSubmission.getOption().get(0)));
                 answer.getAnswer_Storage().put("true", String.valueOf(option.getValue()));
-                answer.setAnswer(option.getValue()); // Set the option value as the answer text
+                answer.setAnswer(option.getValue()); 
             } else {
-                // If it's a text-based answer, set the text directly
             	answer.getAnswer_Storage().put("false", answerSubmission.getAnswer());
                 answer.setAnswer(answerSubmission.getAnswer());
             }
 
-            // Save the answer to the repository
             answerRepository.save(answer);
 
-            // Also save the answer to the Answer_OP repository for logging
             Answer_OP answerOP = new Answer_OP();
             answerOP.setQuestion(question.getText());
             answerOP.setAnswer(answer.getAnswer());
@@ -224,7 +215,6 @@ public class Welcome {
             return ResponseEntity.status(401).body(null);
         }
     }
-    
     
     
     @GetMapping(path="/searchAnswers/{surveyId}")

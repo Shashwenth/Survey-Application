@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
-
+import EnterSurveyPic from '../CSS/EnterSurvey.png'
 
 const EnterSurvey = () => {
 
@@ -17,10 +17,12 @@ const EnterSurvey = () => {
             return;
         }
         try {
-
-            const checkResponseEntry = await axios.get(`http://localhost:8080/searchAnswers/${surveyId}/userId=${auth.user.id}`);
-            if(checkResponseEntry){
-                alert("You Have Already Responded to The Survey. Sorry we do nor have editing feature currently!");
+            console.log(auth.user.id);
+            console.log(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
+            const checkResponseEntry = await axios.get(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
+            console.log(checkResponseEntry);
+            if(checkResponseEntry.data){
+                alert("You Have Already Responded to The Survey. Sorry we do not have editing feature currently!");
                 navigate(`/`);
             }
             else{
@@ -44,17 +46,35 @@ const EnterSurvey = () => {
 
 
     return(
-        <div> 
-            <form onSubmit={handleSubmit}>
-                <h2><b>Enter Survey Id To Enter Response</b></h2>
-                <input
-                type="number"
-                value={surveyId}
-                onChange={(e)=>setSurveyId(e.target.value)}
-                required />
-                <button type="submit">Enter</button>
-            </form>
+        <div className="flex min-h-screen">
+            <div className="w-1/3 flex flex-col p-4">
+            <h2 className="text-2xl font-bold mb-4">Enter Survey Code</h2>
+                        <form onSubmit={handleSubmit}  className="space-y-4">
+                        <label className="block text-sm font-medium text-gray-700">Enter Code</label>
+                        <input
+                            type="number"
+                            value={surveyId}
+                            onChange={(e)=>setSurveyId(e.target.value)}
+                            required className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                            >Enter
+                            </button>
+                        </form>
+            </div>
+
+            <div className="w-2/3 bg-[#701852] p-4">
+            <img
+                src={EnterSurveyPic}
+                alt="Survey Illustration"
+                className="object-cover w-full h-full"
+                />
+            </div>
+            
         </div>
+        
     );
 
 };

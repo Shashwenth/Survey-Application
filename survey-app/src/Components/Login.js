@@ -22,12 +22,13 @@ const Login = () => {
     };
 
     return (
-        <div className="bg-neutral-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="bg-neutral-100 flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="bg-neutral-50 py-8 px-6 shadow-lg rounded-lg sm:px-10">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign In into your Account
         </h2>
-      </div>
+      
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -88,6 +89,8 @@ const Login = () => {
             </button>
           </div>
         </form>
+        </div>
+        </div>
       </div>
     </div>
     );
