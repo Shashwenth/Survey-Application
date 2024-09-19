@@ -36,7 +36,7 @@ const AddQuestions = () => {
 
   const handleFinalSubmit = () => {
     alert('Successfully Added Questions');
-    navigate('/');
+    navigate('/landhere');
   };
 
   const handleSubmit = async (event) => {

@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AddSurvey from './Components/AddSurvey';
 import SurveyList from './Components/SurveyList';
 import AddQuestions from './Components/AddQuestions';
@@ -13,7 +13,8 @@ import EnterSurvey from './Components/EnterASurvey';
 import AuthorizeAccess from './Components/AuthorizeAcess';
 import Example from './Components/NewLandingPage';
 import AuthProvider, { AuthContext } from './Context/AuthContext';
-import Layout from './Components/Layout';
+import Layout from './Components/LayoutNew';
+import Tabs from './Components/NewTab';
 
 const App = () => {
   return (
@@ -30,8 +31,9 @@ const App = () => {
             <Route path="/enter-survey" element={<PrivateRoute><EnterSurvey /></PrivateRoute>} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<PrivateRoute><SurveyList /></PrivateRoute>} />
-            <Route path="/landhere" element={<Example />} />
+            {/* <Route path="/" element={<PrivateRoute><SurveyList /></PrivateRoute>} /> */}
+            <Route path="/landhere" element={<PrivateRoute><Tabs /></PrivateRoute>} />
+            <Route path="/" element={<Example />} />
           </Routes>
         </Layout>
       </Router>
@@ -41,7 +43,8 @@ const App = () => {
 
 const PrivateRoute = ({ children }) => {
   const { auth } = useContext(AuthContext);
-  return auth.user ? children : <Navigate to="/landhere" />;
+  console.log(auth.user);
+  return auth.user ? children : <Navigate to="/" />;
 };
 
 export default App;

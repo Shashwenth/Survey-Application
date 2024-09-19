@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -168,11 +171,15 @@ public class Welcome {
         return ResponseEntity.ok(survey.getQuestions());
     }
     
-    @GetMapping(path = "/usersurveys/{id}")
-    public ResponseEntity<List<Survey>> getAllSurveys(@PathVariable Long id) {
-        List<Survey> surveys = userRepository.findById(id).get().getSurveys();
-        return ResponseEntity.ok(surveys);
-    }
+
+	@GetMapping(path = "/usersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllSurveys(@PathVariable Long id,
+	                                                  @RequestParam(defaultValue = "0") int page, 
+	                                                  @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserId(id, paging);
+	    return ResponseEntity.ok(surveysPage);
+	}
     
     @GetMapping(path = "/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys() {

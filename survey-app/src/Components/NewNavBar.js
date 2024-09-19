@@ -5,9 +5,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
+  { name: 'Home', href: '/landhere', current: true },
   { name: 'Add Survey', href: '/add-survey', current: false },
   { name: 'Enter Survey', href: '/enter-survey', current: false },
+  { name: 'Tabs', href: '/tab', current: false },
 ];
 
 
@@ -21,11 +22,11 @@ export default function NavExample() {
   const navigate= useNavigate();
   const handleLogout = () => {
     alert('You have been logged out'); // Replace with actual logout logic
-    navigate('/landhere')
+    navigate('/')
   };
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 h-16">
+    <Disclosure as="nav" className="bg-gray-800 h-16 mb-0">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 h-full">

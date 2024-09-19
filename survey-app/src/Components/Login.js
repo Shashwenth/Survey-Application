@@ -15,7 +15,7 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:8080/login', { username, password });
             login(response.data);
-            navigate('/');
+            navigate('/landhere');
         } catch (error) {
             console.error('There was an error logging in!', error);
         }
