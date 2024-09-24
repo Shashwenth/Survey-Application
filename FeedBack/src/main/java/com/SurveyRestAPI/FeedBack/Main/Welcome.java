@@ -30,6 +30,8 @@ import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.Service.GenerateSurveyId;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 public class Welcome {
     
@@ -76,6 +78,16 @@ public class Welcome {
         survey.setUniqueId(generateSurveyId.generateRandomString(10));
         Survey create = surveyRepository.save(survey);
         return ResponseEntity.ok(create);
+    }
+    
+    @Transactional
+    @PostMapping(path="/StartNow/{id}")
+    public boolean StartsurveyNow(@PathVariable Long id) {
+    	System.out.printf("Insid Start Now %d\n",id);
+    	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
+    	survey.setStartTime(LocalDateTime.now());
+    	survey.setStatus("active");
+    	return true;
     }
     
     @GetMapping(path="/getSurveyId/{id}")
@@ -139,7 +151,7 @@ public class Welcome {
             	answer.getAnswer_Storage().put("false", answerSubmission.getAnswer());
                 answer.setAnswer(answerSubmission.getAnswer());
             }
-
+            
             answerRepository.save(answer);
 
             Answer_OP answerOP = new Answer_OP();
@@ -151,6 +163,7 @@ public class Welcome {
             answerOP.setAnswer_id(answer.getId());
             answerOpRepository.save(answerOP);
         }
+        survey.setResponsesCount(survey.getResponsesCount()+1);
 
         return ResponseEntity.ok("Responses submitted successfully");
     }
@@ -177,10 +190,37 @@ public class Welcome {
 	                                                  @RequestParam(defaultValue = "0") int page, 
 	                                                  @RequestParam(defaultValue = "5") int size) {
 	    Pageable paging = PageRequest.of(page, size);
-	    Page<Survey> surveysPage = surveyRepository.findByUserId(id, paging);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "active", paging);
 	    return ResponseEntity.ok(surveysPage);
 	}
-    
+	
+	@GetMapping(path = "/Expiredusersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllExpiredSurveys(@PathVariable Long id,
+	                                                         @RequestParam(defaultValue = "0") int page, 
+	                                                         @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "concluded", paging);
+
+	    // Map the Object[] results to Survey objects with responsesCount
+	    Page<Survey> surveyPageWithCounts = surveysPage.map(obj -> {
+	        Survey survey = (Survey) obj;
+	        Long responsesCount = (Long) obj.getResponsesCount();
+	        survey.setResponsesCount(responsesCount);
+	        return survey;
+	    });
+
+	    return ResponseEntity.ok(surveyPageWithCounts);
+	}
+	
+	@GetMapping(path = "/Upcomingusersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllUpcomingSurveys(@PathVariable Long id,
+	                                                         @RequestParam(defaultValue = "0") int page, 
+	                                                         @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "notStarted", paging);
+	    return ResponseEntity.ok(surveysPage);
+	}
+	
     @GetMapping(path = "/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
@@ -195,17 +235,17 @@ public class Welcome {
         return ResponseEntity.ok(updatedSurvey);
     }
     
-    @GetMapping("/userSurveys/{userId}/active")
-    public ResponseEntity<List<Survey>> getActive(@PathVariable Long userId) {
-        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
-        return ResponseEntity.ok(surveys);
-    }
-    
-    @GetMapping("/userSurveys/{userId}/history")
-    public ResponseEntity<List<Survey>> getHistory(@PathVariable Long userId) {
-        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
-        return ResponseEntity.ok(surveys);
-    }
+//    @GetMapping("/userSurveys/{userId}/active")
+//    public ResponseEntity<List<Survey>> getActive(@PathVariable Long userId) {
+//        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
+//        return ResponseEntity.ok(surveys);
+//    }
+//    
+//    @GetMapping("/userSurveys/{userId}/history")
+//    public ResponseEntity<List<Survey>> getHistory(@PathVariable Long userId) {
+//        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
+//        return ResponseEntity.ok(surveys);
+//    }
     
     @PostMapping(path="/signup")
     public ResponseEntity<User> addUser(@RequestBody User user){
@@ -230,6 +270,9 @@ public class Welcome {
     	return !answer_set.isEmpty();
     }
     
+    
+    
+    
     @GetMapping("/survey/{surveyId}/answers")
     public ResponseEntity<List<Answer_OP>> getAnswersBySurvey(@PathVariable Long surveyId, @RequestParam Long user_id) {
         List<Answer_OP> answers = answerOpRepository.findAnswersBySurveyIdAndUserId(surveyId, user_id);
@@ -239,4 +282,5 @@ public class Welcome {
             return ResponseEntity.ok(answers);
         }
     }
+    
 }

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import SurveyList from './SurveyList'; // Adjust the import path as needed
-
+import ExpiredSurveyList from './ExpiredSurveyList';
+import UpcomingSurveyList from './UpcomingSurveys';
 const tabsData = [
   { label: 'My Surveys', content: <SurveyList /> },
-  { label: 'Shared Surveys', content: <SurveyList /> },
+  { label: 'Expired Surveys', content: <ExpiredSurveyList /> },
+  { label: 'Upcoming Surveys', content: <UpcomingSurveyList /> },
 ];
 
 export default function Tabs() {

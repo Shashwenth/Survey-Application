@@ -8,7 +8,6 @@ const navigation = [
   { name: 'Home', href: '/landhere', current: true },
   { name: 'Add Survey', href: '/add-survey', current: false },
   { name: 'Enter Survey', href: '/enter-survey', current: false },
-  { name: 'Tabs', href: '/tab', current: false },
 ];
 
 

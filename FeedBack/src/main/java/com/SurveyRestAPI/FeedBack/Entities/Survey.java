@@ -14,12 +14,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Survey {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	 @Transient
+    private Long responsesCount;
 	
 	private String name;
 	
@@ -79,6 +83,14 @@ public class Survey {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Long getResponsesCount() {
+        return responsesCount;
+    }
+
+    public void setResponsesCount(Long responsesCount) {
+        this.responsesCount = responsesCount;
+    }
 
 	public List<Question> getQuestions() {
 		return questions;

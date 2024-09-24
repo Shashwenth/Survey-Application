@@ -20,10 +20,19 @@ const EnterSurvey = () => {
             console.log(auth.user.id);
             console.log(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
             const checkResponseEntry = await axios.get(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
-            console.log(checkResponseEntry);
+            const checkifExpired = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+            
             if(checkResponseEntry.data){
                 alert("You Have Already Responded to The Survey. Sorry we do not have editing feature currently!");
-                navigate(`/`);
+                navigate(`/landhere`);
+            }
+            else if(checkifExpired.data.status==="concluded"){
+                console.log("In concluded")
+                alert("The Form You are Trying to Enter is Expired");
+            }
+            else if(checkifExpired.data.status==="notStarted"){
+                console.log("In not active")
+                alert("The Form You are Trying to Enter Not active Yet. Visit Later.");
             }
             else{
                 const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
