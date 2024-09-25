@@ -14,7 +14,6 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
 	Page<Survey> findByUserIdAndStatus(Long userId, String status, Pageable pageable);
 	Page<Survey> findByUserId(Long userId, Pageable pageable);
 	
-	@Query("select count(distinct r.id) from Survey r")
-	Long findtotalCount();
+	
 
 }

@@ -112,10 +112,20 @@ const AddQuestions = () => {
                   )}
 
                   {question.type === 'content' && (
-                    <div className="bg-white p-4 rounded-md shadow-sm">
-                      <p className="text-gray-800">{question.text}</p>
-                    </div>
+                    <>
+                      <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+                      {question.text}
+                    </label>
+                  </>
                   )}
+
+                  {question.type === 'heading' && (
+                    <>
+                      <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+                      <h3>{question.text}</h3>
+                    </label>
+                  </>
+                  )}  
 
                 </div>
               ))}
@@ -147,7 +157,8 @@ const AddQuestions = () => {
             >
               <option value="text">Text</option>
               <option value="checkbox">Checkbox</option>
-              <option value="content">Content</option>
+              <option value="content">Plain Text</option>
+              <option value="heading">Heading</option>
               {/* Add other types if needed */}
             </select>
           </div>

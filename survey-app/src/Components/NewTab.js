@@ -13,7 +13,7 @@ export default function Tabs() {
 
   return (
     <div className="bg-[#701852] min-h-screen mt-0 py-4">
-    <div className="max-w-4xl mx-auto mt-0">
+    <div className="max-w-6xl mx-auto mt-0">
       <div className="flex space-x-3 border-b border-gray-200">
         {tabsData.map((tab, idx) => (
           <button

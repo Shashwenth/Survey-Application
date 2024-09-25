@@ -145,6 +145,14 @@ export default function AddResponse() {
                     <p className="text-gray-800">{question.text}</p>
                   </div>
                 )}
+
+                {question.type === 'heading' && (
+                    <>
+                      <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+                      <h3>{question.text}</h3>
+                    </label>
+                  </>
+                  )} 
               </div>
             ))}
           <div className="text-center">

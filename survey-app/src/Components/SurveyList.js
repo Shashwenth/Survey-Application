@@ -9,6 +9,7 @@ const SurveyList = () => {
   const [totalPages, setTotalPages] = useState(0); // Total pages
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -29,18 +30,24 @@ const SurveyList = () => {
     if (auth.user) {
       fetchSurveys();
     }
-  }, [auth.user, page]);
+  }, [auth.user, page, refresh]);
 
   const handleAddQuestions = (surveyId) => {
     navigate(`/add-questions/${surveyId}`);
   };
 
-  const handleShowQuestions = (surveyId) => {
-    navigate(`/feedback-form/${surveyId}`);
-  };
+  const handleEndNow = async (surveyId) => {
+    try{
+      const response= await axios.post(`http://localhost:8080/EndNow/${surveyId}`);
+      if(response.data){
+        setRefresh((prev) => !prev);
+      }
 
-  const respondQuestions = (surveyId) => {
-    navigate(`/Respond/${surveyId}`);
+      alert(`The Survey is Ended`);
+    }catch(error){
+      alert(`Some error encountered try again later`);
+      console.log(error);
+    }
   };
 
   const showAnswers = (surveyId) => {
@@ -72,6 +79,12 @@ const SurveyList = () => {
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                 Actions
               </th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Entrance Code 
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Secret Code 
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -87,23 +100,30 @@ const SurveyList = () => {
                     <button
                       className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
                       onClick={() => handleAddQuestions(survey.id)}>
-                      Add Questions
+                      Add Questions/ Preview
                     </button>
                     <button
                       className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
-                      onClick={() => handleShowQuestions(survey.id)}>
-                      Show Questions
-                    </button>
-                    <button
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                      onClick={() => respondQuestions(survey.id)}>
-                      Answer Survey
+                      onClick={() => handleEndNow(survey.id)}>
+                      End Now
                     </button>
                     <button
                       className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded"
                       onClick={() => showAnswers(survey.id)}>
                       Show Answers
                     </button>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex flex-wrap gap-2">
+                      {survey.id}
+
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex flex-wrap gap-2">
+                      {survey.uniqueId}
+
                   </div>
                 </td>
               </tr>

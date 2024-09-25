@@ -90,6 +90,16 @@ public class Welcome {
     	return true;
     }
     
+    @Transactional
+    @PostMapping(path="/EndNow/{id}")
+    public boolean EndsurveyNow(@PathVariable Long id) {
+    	System.out.printf("Inside END Now %d\n",id);
+    	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
+    	survey.setEndTime(LocalDateTime.now());
+    	survey.setStatus("concluded");
+    	return true;
+    }
+    
     @GetMapping(path="/getSurveyId/{id}")
     public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
     	System.out.println();
@@ -204,7 +214,7 @@ public class Welcome {
 	    // Map the Object[] results to Survey objects with responsesCount
 	    Page<Survey> surveyPageWithCounts = surveysPage.map(obj -> {
 	        Survey survey = (Survey) obj;
-	        Long responsesCount = (Long) obj.getResponsesCount();
+	        Long responsesCount = answerRepository.findtotalCount(survey);
 	        survey.setResponsesCount(responsesCount);
 	        return survey;
 	    });
