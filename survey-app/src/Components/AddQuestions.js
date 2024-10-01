@@ -59,9 +59,11 @@ const AddQuestions = () => {
 
   return (
     <div className="flex min-h-screen">
+      {/* Left side: Preview */}
       <div className="w-2/3 bg-[#701852] p-4">
-      <div className="sm:mx-auto sm:w-full sm:max-w-xl">
-      <div className="bg-gray-200 py-8 px-6 shadow-lg rounded-lg sm:px-10">
+        {/* ... existing code for preview ... */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-xl">
+          <div className="bg-gray-200 py-8 px-6 shadow-lg rounded-lg sm:px-10">
             <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Preview
             </h2>
@@ -114,26 +116,25 @@ const AddQuestions = () => {
                   {question.type === 'content' && (
                     <>
                       <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-                      {question.text}
-                    </label>
-                  </>
+                        {question.text}
+                      </label>
+                    </>
                   )}
 
                   {question.type === 'heading' && (
                     <>
-                      <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-                      <h3>{question.text}</h3>
-                    </label>
-                  </>
-                  )}  
-
+                      <h3 className="block text-lg font-bold leading-6 text-gray-900 mb-2">
+                        {question.text}
+                      </h3>
+                    </>
+                  )}
                 </div>
               ))}
           </div>
         </div>
       </div>
 
-      {/* Form Container */}
+      {/* Right side: Form */}
       <div className="w-1/3 flex flex-col p-4">
         <h2 className="text-2xl font-bold mb-4">Add Questions</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -159,7 +160,6 @@ const AddQuestions = () => {
               <option value="checkbox">Checkbox</option>
               <option value="content">Plain Text</option>
               <option value="heading">Heading</option>
-              {/* Add other types if needed */}
             </select>
           </div>
           {type === 'checkbox' && (
@@ -187,7 +187,6 @@ const AddQuestions = () => {
               ))}
             </div>
           )}
-          {/* No options needed for 'content' or 'text' types */}
           <button
             type="submit"
             className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
@@ -203,6 +202,28 @@ const AddQuestions = () => {
             Submit Survey
           </button>
         </form>
+
+        {/* Instructions Section */}
+        <div className="mt-6 p-4 bg-gray-100 rounded-md">
+          <h3 className="text-lg font-semibold mb-2">Instructions</h3>
+          <p className="text-sm text-gray-700">
+            You can add different types of questions to your survey. The available types are:
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-700 mt-2">
+            <li>
+              <strong>Text:</strong> A question that expects a short text answer from the respondent.
+            </li>
+            <li>
+              <strong>Checkbox:</strong> A question where respondents can select one or more options from a list.
+            </li>
+            <li>
+              <strong>Plain Text:</strong> A piece of information or instruction that is part of the survey but does not require an answer. It's displayed as text in the form.
+            </li>
+            <li>
+              <strong>Heading:</strong> A heading or title to separate different sections of your survey.
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

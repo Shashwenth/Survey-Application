@@ -2,22 +2,28 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
+
+  // Get the 'from' location or default to '/landhere'
+  const from = location.state?.from?.pathname || '/landhere';
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/login', { username, password });
+            console.log('Login response:', response.data);
             login(response.data);
-            navigate('/landhere');
+            navigate(from, { replace: true });
         } catch (error) {
             console.error('There was an error logging in!', error);
+            // Handle login error (e.g., display an error message)
         }
     };
 

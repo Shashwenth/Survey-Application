@@ -15,4 +15,5 @@ public interface Answerrepository extends JpaRepository<Answer, Long>{
 	
 	@Query("select count(distinct r.user.id) from Answer r where r.survey.id= :#{#survey.id}")
 	Long findtotalCount(@Param("survey") Survey Survey);
+	
 }
