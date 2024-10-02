@@ -6,7 +6,7 @@ import Footer from './Footer';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const noNavRoutes = ['/signup', '/login', '/'];
+  const noNavRoutes = ['/signup', '/login', '/','/forgot-password','/reset-password'];
 
   const shouldShowNav = !noNavRoutes.includes(location.pathname);
 

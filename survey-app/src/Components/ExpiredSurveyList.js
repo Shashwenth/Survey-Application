@@ -61,6 +61,9 @@ const ExpiredSurveyList = () => {
                 Number of Responses
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Start Date
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                 Expired Date
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
@@ -79,6 +82,9 @@ const ExpiredSurveyList = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                   {survey.responsesCount || 0}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                  {new Date(survey.startTime).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                   {new Date(survey.endTime).toLocaleDateString()}

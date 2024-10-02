@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../Context/AuthContext';
 import createSurveyPic from '../CSS/CreateSurvey.png'
+import{useNavigate} from 'react-router-dom'
 
 const AddSurvey = () => {
     const [name, setName] = useState('');
@@ -9,6 +10,7 @@ const AddSurvey = () => {
     const [endTime, setEndTime] = useState('');
     const [access, setAccess] = useState('');
     const { auth } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -40,6 +42,8 @@ const AddSurvey = () => {
             setStartTime('');
             setEndTime('');
             setAccess('');
+            alert('Successfully Added Survey');
+            navigate(`/landhere`);
         } catch (error) {
             console.error('There was an error adding the survey!', error);
         }

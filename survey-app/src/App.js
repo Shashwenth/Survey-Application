@@ -16,7 +16,9 @@ import AuthProvider from './Context/AuthContext';
 import Layout from './Components/LayoutNew';
 import Tabs from './Components/NewTab';
 import PrivateRoute from './Components/PrivateRoute'; // We'll create this component
-
+import ForgotPassword from './Components/ForgotPassword';
+import ResetPassword from './Components/ResetPassword';
+import TestPopup from './Components/Popup'
 const App = () => {
   return (
     <AuthProvider>
@@ -26,8 +28,9 @@ const App = () => {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/" element={<Example />} />
-
             {/* Private Routes */}
             <Route path="/add-survey" element={<PrivateRoute><AddSurvey /></PrivateRoute>} />
             <Route path="/add-questions/:surveyId" element={<PrivateRoute><AddQuestions /></PrivateRoute>} />

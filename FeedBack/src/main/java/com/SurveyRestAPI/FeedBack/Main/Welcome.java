@@ -2,6 +2,7 @@ package com.SurveyRestAPI.FeedBack.Main;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SurveyRestAPI.FeedBack.Entities.Answer;
 import com.SurveyRestAPI.FeedBack.Entities.AnswerSubmission;
 import com.SurveyRestAPI.FeedBack.Entities.Answer_OP;
+import com.SurveyRestAPI.FeedBack.Entities.EmailDTO;
 import com.SurveyRestAPI.FeedBack.Entities.Option;
 import com.SurveyRestAPI.FeedBack.Entities.Question;
 import com.SurveyRestAPI.FeedBack.Entities.Survey;
@@ -228,7 +230,14 @@ public class Welcome {
 	                                                         @RequestParam(defaultValue = "5") int size) {
 	    Pageable paging = PageRequest.of(page, size);
 	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "notStarted", paging);
-	    return ResponseEntity.ok(surveysPage);
+	    Page<Survey> surveyPageWithCounts = surveysPage.map(obj -> {
+	        Survey survey = (Survey) obj;
+	        Long responsesCount = answerRepository.findtotalCount(survey);
+	        survey.setResponsesCount(responsesCount);
+	        return survey;
+	    });
+
+	    return ResponseEntity.ok(surveyPageWithCounts);
 	}
 	
     @GetMapping(path = "/surveys")
@@ -291,6 +300,22 @@ public class Welcome {
         } else {
             return ResponseEntity.ok(answers);
         }
+    }
+    
+    @PostMapping("/forgot-password")
+    public ResponseEntity<User> forgotPossword(@RequestBody EmailDTO email){
+    	System.out.println(email.getEmail());
+    	Optional<User> op_user=userRepository.findByEmail(email.getEmail());
+    	System.out.println(op_user.get().getUsername());
+    	return ResponseEntity.ok(op_user.orElseThrow(()->new RuntimeException("Email Not Valid")));   	
+    }
+    
+    @Transactional
+    @PostMapping("/reset-password/{id}")
+    public ResponseEntity<User> forgotPossword(@PathVariable Long id, @RequestBody User us){
+    	Optional<User> op_user=userRepository.findById(id);
+    	op_user.get().setPassword(us.getPassword());
+    	return ResponseEntity.ok(op_user.orElseThrow(()->new RuntimeException("Email Not Valid")));   	
     }
     
 }

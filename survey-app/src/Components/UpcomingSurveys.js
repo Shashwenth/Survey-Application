@@ -21,7 +21,7 @@ const UpcomingSurveyList = () => {
           }
         );
         setSurveys(response.data.content);
-        setTotalPages(response.data.totalPages);
+        setTotalPages(response.data.totalPages !=0 ? response.data.totalPages : 1);
       } catch (error) {
         console.error('There was an error fetching the surveys!', error);
       }
@@ -113,6 +113,7 @@ const UpcomingSurveyList = () => {
       </div>
 
       <div className="flex justify-between items-center mt-6">
+        {console.log(page)}
         <button
           className="px-4 py-2 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
           onClick={goToPreviousPage}
