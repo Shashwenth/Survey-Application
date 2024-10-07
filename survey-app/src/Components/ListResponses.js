@@ -32,12 +32,84 @@ const ListResponses = () => {
     fetchAnswers();
   }, [surveyId]);
 
+  // Function to generate and download the PDF using the Ruby backend
+  const generatePDF = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:4567/generate-pdf',
+        {
+          surveyId: surveyId,
+          groupedResponses: groupedResponses,
+        },
+        {
+          responseType: 'blob', // Ensures we get the file as a binary blob
+        }
+      );
+
+      // Create a URL for the blob and download the PDF
+      const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = `Survey_${surveyId}_Responses.pdf`;
+      link.click();
+
+      // Clean up the URL object after the download is triggered
+      URL.revokeObjectURL(pdfUrl);
+    } catch (error) {
+      console.log('Error generating PDF:', error);
+    }
+  };
+
+  // Function to preview the PDF in a new tab
+  const previewPDF = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:4567/generate-pdf',
+        {
+          surveyId: surveyId,
+          groupedResponses: groupedResponses,
+        },
+        {
+          responseType: 'blob',
+        }
+      );
+
+      // Create a URL for the blob and open the PDF in a new tab
+      const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl, '_blank');
+
+      // Clean up the URL object after preview
+      URL.revokeObjectURL(pdfUrl);
+    } catch (error) {
+      console.log('Error previewing PDF:', error);
+    }
+  };
+
   return (
     <div className="bg-[#701852] min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-3xl font-semibold text-gray-100 mb-8 text-center">
           Responses for Survey {surveyId}
         </h2>
+
+        {/* Buttons */}
+        <div className="mb-4 text-center">
+          <button
+            onClick={generatePDF}
+            className="bg-green-500 text-white py-2 px-4 rounded-lg mr-4"
+          >
+            Download Responses
+          </button>
+          <button
+            onClick={previewPDF}
+            className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+          >
+            Preview Responses
+          </button>
+        </div>
+
         {Object.values(groupedResponses).length === 0 ? (
           <p className="text-center text-gray-200">No responses yet.</p>
         ) : (
@@ -62,7 +134,9 @@ const ListResponses = () => {
                         {response.answer !== null
                           ? response.answer
                           : response.optionAnswers
-                          ? response.optionAnswers.map((opt) => opt.value).join(', ')
+                          ? response.optionAnswers
+                              .map((opt) => opt.value)
+                              .join(', ')
                           : 'N/A'}
                       </p>
                     </div>

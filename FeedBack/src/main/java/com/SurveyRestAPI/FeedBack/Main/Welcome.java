@@ -175,7 +175,7 @@ public class Welcome {
             answerOP.setAnswer_id(answer.getId());
             answerOpRepository.save(answerOP);
         }
-        survey.setResponsesCount(survey.getResponsesCount()+1);
+        //survey.setResponsesCount(survey.getResponsesCount()+1);
 
         return ResponseEntity.ok("Responses submitted successfully");
     }
