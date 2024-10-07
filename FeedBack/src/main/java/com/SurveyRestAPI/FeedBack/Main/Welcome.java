@@ -30,7 +30,9 @@ import com.SurveyRestAPI.FeedBack.Repositories.OptionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
+import com.SurveyRestAPI.FeedBack.Repositories.Service.CustomerService;
 import com.SurveyRestAPI.FeedBack.Repositories.Service.GenerateSurveyId;
+import com.SurveyRestAPI.FeedBack.Security.PasswordConfig;
 
 import jakarta.transaction.Transactional;
 
@@ -57,6 +59,9 @@ public class Welcome {
     
     @Autowired
     private GenerateSurveyId generateSurveyId;
+    
+    @Autowired
+    private PasswordConfig passwordEncoder;
     
     @GetMapping(path="/")
     public String welcome() {
@@ -266,21 +271,26 @@ public class Welcome {
 //        return ResponseEntity.ok(surveys);
 //    }
     
-    @PostMapping(path="/signup")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        User create=userRepository.save(user);
-        return ResponseEntity.ok(create);
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        User foundUser = userRepository.findByUsername(user.getUsername());
-        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
-            return ResponseEntity.ok(foundUser);
-        } else {
-            return ResponseEntity.status(401).body(null);
-        }
-    }
+//    @Autowired
+//	private CustomerService customerService;
+//
+//    
+//    @PostMapping(path="/signup")
+//    public ResponseEntity<User> addUser(@RequestBody User user){
+//        User create=customerService.saveCustomer(user);
+//        return ResponseEntity.ok(create);
+//    }
+//    
+//    @PostMapping("/login")
+//    public ResponseEntity<User> loginUser(@RequestBody User user) {
+//        User foundUser = userRepository.findByUsername(user.getUsername());
+//        if (foundUser != null && passwordEncoder(user.getPassword(), foundUser.getPassword())) {
+//            return ResponseEntity.ok(foundUser);
+//        } else {
+//            return ResponseEntity.status(401).body(null);
+//        }
+//    }
+
     
     
     @GetMapping(path="/searchAnswers/{surveyId}")

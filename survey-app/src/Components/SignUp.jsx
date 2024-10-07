@@ -13,7 +13,7 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:8080/signup', { username, password,email });
+      await axios.post('http://localhost:8080/sign/signup', { username, password,email });
       alert('User registered successfully');
       setUsername('');
       setPassword('');

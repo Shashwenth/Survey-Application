@@ -17,7 +17,7 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/login', { username, password });
+            const response = await axios.post('http://localhost:8080/sign/login', { username, password });
             console.log('Login response:', response.data);
             login(response.data);
             navigate(from, { replace: true });
