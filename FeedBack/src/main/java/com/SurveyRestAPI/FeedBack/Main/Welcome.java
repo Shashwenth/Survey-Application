@@ -2,8 +2,12 @@ package com.SurveyRestAPI.FeedBack.Main;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SurveyRestAPI.FeedBack.Entities.Answer;
 import com.SurveyRestAPI.FeedBack.Entities.AnswerSubmission;
 import com.SurveyRestAPI.FeedBack.Entities.Answer_OP;
+import com.SurveyRestAPI.FeedBack.Entities.EmailDTO;
 import com.SurveyRestAPI.FeedBack.Entities.Option;
 import com.SurveyRestAPI.FeedBack.Entities.Question;
 import com.SurveyRestAPI.FeedBack.Entities.Survey;
@@ -25,6 +30,11 @@ import com.SurveyRestAPI.FeedBack.Repositories.OptionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
+import com.SurveyRestAPI.FeedBack.Repositories.Service.CustomerService;
+import com.SurveyRestAPI.FeedBack.Repositories.Service.GenerateSurveyId;
+import com.SurveyRestAPI.FeedBack.Security.PasswordConfig;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 public class Welcome {
@@ -47,6 +57,12 @@ public class Welcome {
     @Autowired
     private OptionRepository optionRepository;
     
+    @Autowired
+    private GenerateSurveyId generateSurveyId;
+    
+    @Autowired
+    private PasswordConfig passwordEncoder;
+    
     @GetMapping(path="/")
     public String welcome() {
         return "Hi Shash";
@@ -66,13 +82,34 @@ public class Welcome {
         if(survey.getStartTime().isAfter(now)) {
             survey.setStatus("notStarted");
         }
-        
+        survey.setUniqueId(generateSurveyId.generateRandomString(10));
         Survey create = surveyRepository.save(survey);
         return ResponseEntity.ok(create);
     }
-
+    
+    @Transactional
+    @PostMapping(path="/StartNow/{id}")
+    public boolean StartsurveyNow(@PathVariable Long id) {
+    	System.out.printf("Insid Start Now %d\n",id);
+    	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
+    	survey.setStartTime(LocalDateTime.now());
+    	survey.setStatus("active");
+    	return true;
+    }
+    
+    @Transactional
+    @PostMapping(path="/EndNow/{id}")
+    public boolean EndsurveyNow(@PathVariable Long id) {
+    	System.out.printf("Inside END Now %d\n",id);
+    	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
+    	survey.setEndTime(LocalDateTime.now());
+    	survey.setStatus("concluded");
+    	return true;
+    }
+    
     @GetMapping(path="/getSurveyId/{id}")
     public ResponseEntity<Survey> getSurvey(@PathVariable Long id){
+    	System.out.println();
         Survey survey=surveyRepository.findById(id).orElse(null);
         if(survey!=null) {
             return ResponseEntity.ok(survey);
@@ -105,7 +142,7 @@ public class Welcome {
         @RequestParam Long userId,
         @RequestBody List<AnswerSubmission> answers) {
 
-        // Fetch the survey and user from the database
+    	
         Survey survey = surveyRepository.findById(surveyId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid survey Id:" + surveyId));
         System.out.println(survey.getName());
@@ -113,35 +150,27 @@ public class Welcome {
             .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         System.out.println(user.getUsername());
 
-        // Loop through each answer submission
         for (AnswerSubmission answerSubmission : answers) {
-            // Fetch the corresponding question from the database
             Question question = questionRepository.findById(answerSubmission.getQuestion().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid question Id:" + answerSubmission.getQuestion().getId()));
 
-            // Create and populate the Answer entity
             Answer answer = new Answer();
             answer.setSurvey(survey);
             answer.setQuestion(question);
             answer.setUser(user);
 
-            // Check if the submission is an option or a text-based answer
             if (answerSubmission.getIsOption().equals("true")) {
-                // If it's an option, find the option by ID and set the answer
                 Option option = optionRepository.findById(answerSubmission.getOption().get(0))
                     .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + answerSubmission.getOption().get(0)));
                 answer.getAnswer_Storage().put("true", String.valueOf(option.getValue()));
-                answer.setAnswer(option.getValue()); // Set the option value as the answer text
+                answer.setAnswer(option.getValue()); 
             } else {
-                // If it's a text-based answer, set the text directly
             	answer.getAnswer_Storage().put("false", answerSubmission.getAnswer());
                 answer.setAnswer(answerSubmission.getAnswer());
             }
-
-            // Save the answer to the repository
+            
             answerRepository.save(answer);
 
-            // Also save the answer to the Answer_OP repository for logging
             Answer_OP answerOP = new Answer_OP();
             answerOP.setQuestion(question.getText());
             answerOP.setAnswer(answer.getAnswer());
@@ -151,6 +180,7 @@ public class Welcome {
             answerOP.setAnswer_id(answer.getId());
             answerOpRepository.save(answerOP);
         }
+        //survey.setResponsesCount(survey.getResponsesCount()+1);
 
         return ResponseEntity.ok("Responses submitted successfully");
     }
@@ -160,18 +190,61 @@ public class Welcome {
     	return answerRepository.findBySurveyId(id);
     }
     
+    @GetMapping(path="getSurveyUniqueId/{id}")
+    public String getSurveyUniqueIdentifier(@PathVariable Long id) {
+    	return surveyRepository.findById(id).get().getUniqueId();
+    }
+    
     @GetMapping(path="/getQuestion/{id}")
     public ResponseEntity<List<Question>> getQuestions(@PathVariable Long id){
         Survey survey=surveyRepository.findById(id).orElse(null);
         return ResponseEntity.ok(survey.getQuestions());
     }
     
-    @GetMapping(path = "/usersurveys/{id}")
-    public ResponseEntity<List<Survey>> getAllSurveys(@PathVariable Long id) {
-        List<Survey> surveys = userRepository.findById(id).get().getSurveys();
-        return ResponseEntity.ok(surveys);
-    }
-    
+
+	@GetMapping(path = "/usersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllSurveys(@PathVariable Long id,
+	                                                  @RequestParam(defaultValue = "0") int page, 
+	                                                  @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "active", paging);
+	    return ResponseEntity.ok(surveysPage);
+	}
+	
+	@GetMapping(path = "/Expiredusersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllExpiredSurveys(@PathVariable Long id,
+	                                                         @RequestParam(defaultValue = "0") int page, 
+	                                                         @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "concluded", paging);
+
+	    // Map the Object[] results to Survey objects with responsesCount
+	    Page<Survey> surveyPageWithCounts = surveysPage.map(obj -> {
+	        Survey survey = (Survey) obj;
+	        Long responsesCount = answerRepository.findtotalCount(survey);
+	        survey.setResponsesCount(responsesCount);
+	        return survey;
+	    });
+
+	    return ResponseEntity.ok(surveyPageWithCounts);
+	}
+	
+	@GetMapping(path = "/Upcomingusersurveys/{id}")
+	public ResponseEntity<Page<Survey>> getAllUpcomingSurveys(@PathVariable Long id,
+	                                                         @RequestParam(defaultValue = "0") int page, 
+	                                                         @RequestParam(defaultValue = "5") int size) {
+	    Pageable paging = PageRequest.of(page, size);
+	    Page<Survey> surveysPage = surveyRepository.findByUserIdAndStatus(id, "notStarted", paging);
+	    Page<Survey> surveyPageWithCounts = surveysPage.map(obj -> {
+	        Survey survey = (Survey) obj;
+	        Long responsesCount = answerRepository.findtotalCount(survey);
+	        survey.setResponsesCount(responsesCount);
+	        return survey;
+	    });
+
+	    return ResponseEntity.ok(surveyPageWithCounts);
+	}
+	
     @GetMapping(path = "/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
@@ -186,56 +259,48 @@ public class Welcome {
         return ResponseEntity.ok(updatedSurvey);
     }
     
-    @GetMapping("/userSurveys/{userId}/active")
-    public ResponseEntity<List<Survey>> getActive(@PathVariable Long userId) {
-        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
-        return ResponseEntity.ok(surveys);
+//    @GetMapping("/userSurveys/{userId}/active")
+//    public ResponseEntity<List<Survey>> getActive(@PathVariable Long userId) {
+//        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "active");
+//        return ResponseEntity.ok(surveys);
+//    }
+//    
+//    @GetMapping("/userSurveys/{userId}/history")
+//    public ResponseEntity<List<Survey>> getHistory(@PathVariable Long userId) {
+//        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
+//        return ResponseEntity.ok(surveys);
+//    }
+    
+//    @Autowired
+//	private CustomerService customerService;
+//
+//    
+//    @PostMapping(path="/signup")
+//    public ResponseEntity<User> addUser(@RequestBody User user){
+//        User create=customerService.saveCustomer(user);
+//        return ResponseEntity.ok(create);
+//    }
+//    
+//    @PostMapping("/login")
+//    public ResponseEntity<User> loginUser(@RequestBody User user) {
+//        User foundUser = userRepository.findByUsername(user.getUsername());
+//        if (foundUser != null && passwordEncoder(user.getPassword(), foundUser.getPassword())) {
+//            return ResponseEntity.ok(foundUser);
+//        } else {
+//            return ResponseEntity.status(401).body(null);
+//        }
+//    }
+
+    
+    
+    @GetMapping(path="/searchAnswers/{surveyId}")
+    public boolean searchAnswerForUser(@PathVariable Long surveyId, @RequestParam Long userId) {
+    	List<Answer> answer_set=answerRepository.findBySurveyIdAndUserId(surveyId, userId);
+    	return !answer_set.isEmpty();
     }
     
-    @GetMapping("/userSurveys/{userId}/history")
-    public ResponseEntity<List<Survey>> getHistory(@PathVariable Long userId) {
-        List<Survey> surveys = surveyRepository.findByUserIdAndStatus(userId, "Concluded");
-        return ResponseEntity.ok(surveys);
-    }
-    
-    @PostMapping(path="/signup")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        User create=userRepository.save(user);
-        return ResponseEntity.ok(create);
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        User foundUser = userRepository.findByUsername(user.getUsername());
-        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
-            return ResponseEntity.ok(foundUser);
-        } else {
-            return ResponseEntity.status(401).body(null);
-        }
-    }
     
     
-    
-    @PostMapping("/addAnswer")
-    public ResponseEntity<String> addAnswer(@RequestParam  Long id , @RequestBody List<Answer> answers){
-        for(Answer ans : answers) {
-            Question question = questionRepository.findById(ans.getQuestion().getId()).orElse(null);
-            Survey survey=surveyRepository.findById(ans.getSurvey().getId()).orElse(null);
-            ans.setQuestion(question);
-            ans.setSurvey(survey);
-            ans.setUser(userRepository.findById(id).orElse(null));
-            Answer_OP answerOP=new Answer_OP();
-            answerOP.setQuestion(question.getText());
-            answerOP.setAnswer(ans.getAnswer());
-            answerOP.setQuestion_id(question.getId());
-            answerOP.setSurveyId(question.getSurvey().getId());
-            answerOP.setuser_id(id);
-            answerRepository.save(ans);
-            answerOP.setAnswer_id(ans.getId());
-            answerOpRepository.save(answerOP);
-        }
-        return ResponseEntity.ok("Answers submitted successfully");
-    }
     
     @GetMapping("/survey/{surveyId}/answers")
     public ResponseEntity<List<Answer_OP>> getAnswersBySurvey(@PathVariable Long surveyId, @RequestParam Long user_id) {
@@ -246,4 +311,21 @@ public class Welcome {
             return ResponseEntity.ok(answers);
         }
     }
+    
+    @PostMapping("/forgot-password")
+    public ResponseEntity<User> forgotPossword(@RequestBody EmailDTO email){
+    	System.out.println(email.getEmail());
+    	Optional<User> op_user=userRepository.findByEmail(email.getEmail());
+    	System.out.println(op_user.get().getUsername());
+    	return ResponseEntity.ok(op_user.orElseThrow(()->new RuntimeException("Email Not Valid")));   	
+    }
+    
+    @Transactional
+    @PostMapping("/reset-password/{id}")
+    public ResponseEntity<User> forgotPossword(@PathVariable Long id, @RequestBody User us){
+    	Optional<User> op_user=userRepository.findById(id);
+    	op_user.get().setPassword(us.getPassword());
+    	return ResponseEntity.ok(op_user.orElseThrow(()->new RuntimeException("Email Not Valid")));   	
+    }
+    
 }

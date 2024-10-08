@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Survey {
@@ -21,9 +22,16 @@ public class Survey {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	 @Transient
+    private Long responsesCount;
+	
 	private String name;
 	
 	private String status;
+	
+	public String uniqueId;
+	
+	private String access;
 	
 	private LocalDateTime startTime;
 	
@@ -43,6 +51,7 @@ public class Survey {
 	}
 
 	
+	
 
 	public Survey(Long id, String name, String status, LocalDateTime startTime, LocalDateTime endTime,
 			List<Question> questions, User user) {
@@ -56,7 +65,8 @@ public class Survey {
 		this.user = user;
 	}
 
-
+	
+	
 
 	public Long getId() {
 		return id;
@@ -73,6 +83,14 @@ public class Survey {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Long getResponsesCount() {
+        return responsesCount;
+    }
+
+    public void setResponsesCount(Long responsesCount) {
+        this.responsesCount = responsesCount;
+    }
 
 	public List<Question> getQuestions() {
 		return questions;
@@ -112,6 +130,23 @@ public class Survey {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getAccess() {
+		return access;
+	}
+
+
+	public void setAccess(String access) {
+		this.access = access;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 	
 	
