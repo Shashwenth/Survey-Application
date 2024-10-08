@@ -6,7 +6,7 @@ import { AuthContext } from '../Context/AuthContext';
 const ExpiredSurveyList = () => {
   const [surveys, setSurveys] = useState([]);
   const [page, setPage] = useState(0); // Current page
-  const [totalPages, setTotalPages] = useState(0); // Total pages
+  const [totalPages, setTotalPages] = useState(1); // Total pages
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
@@ -19,8 +19,8 @@ const ExpiredSurveyList = () => {
             params: { page, size: 4 }, // Pagination params
           }
         );
-        setSurveys(response.data.content);
-        setTotalPages(response.data.totalPages);
+        setSurveys(response.data.content); // Set the current page's surveys
+        setTotalPages(response.data.totalPages !=0 ? response.data.totalPages : 1);
       } catch (error) {
         console.error('There was an error fetching the surveys!', error);
       }

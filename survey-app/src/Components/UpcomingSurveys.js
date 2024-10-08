@@ -6,7 +6,7 @@ import { AuthContext } from '../Context/AuthContext';
 const UpcomingSurveyList = () => {
   const [surveys, setSurveys] = useState([]);
   const [page, setPage] = useState(0); // Current page
-  const [totalPages, setTotalPages] = useState(0); // Total pages
+  const [totalPages, setTotalPages] = useState(1); // Total pages
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
   const [refresh, setRefresh] = useState(false);
