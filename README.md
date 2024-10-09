@@ -1,5 +1,5 @@
 # Survey-Application
-This Full Stack Appliction is a Culmination of all my learning and Experiences put into developing an Web application to generate Questionnaire, Survey, Feedback forms. The major stacks used in this application are
+This Full Stack Appliction is a Web application to generate Questionnaire, Survey, Feedback forms. The major stacks used in this application are
 Spring Boot, React, Flask, Open AI, Ruby. 
 
 I am attaching the instructions to run the docker files ( Currently in Deployment Branch)
