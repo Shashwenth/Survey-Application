@@ -12,7 +12,6 @@ public class PasswordConfig {
     private static final Argon2 argon2 = Argon2Factory.create();
 
     public static String hashPassword(String plainPassword) {
-        // Parameters can be adjusted based on your security and performance needs
         int iterations = 3;
         int memory = 65536; // 64MB
         int parallelism = 1;

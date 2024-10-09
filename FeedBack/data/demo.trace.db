@@ -1044,6 +1044,7 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection wa
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 16 more
+<<<<<<< Updated upstream
 2024-10-07 13:21:33.985865-07:00 database: wrong user or password; user: "USER"
 org.h2.message.DbException: Wrong user name or password [28000-224]
 	at org.h2.message.DbException.get(DbException.java:223)
@@ -1225,6 +1226,45 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 50 more
 2024-10-07 13:54:15.857278-07:00 database: wrong user or password; user: "SA"
+=======
+2024-10-08 10:47:21.421792-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:21.465792-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:27.274574-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:27.281564-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:33.273044-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:33.279007-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:39.282862-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:39.288860-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:45.272661-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:45.277664-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:51.279231-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:47:51.285226-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-08 10:51:24.693044-07:00 database: wrong user or password; user: "SA"
+>>>>>>> Stashed changes
 org.h2.message.DbException: Wrong user name or password [28000-224]
 	at org.h2.message.DbException.get(DbException.java:223)
 	at org.h2.message.DbException.get(DbException.java:199)
