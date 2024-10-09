@@ -1,20 +1,43 @@
 require 'sinatra'
 require 'json'
 require 'prawn'
+require 'sinatra/cors'
 
 class PDFService < Sinatra::Base
+  register Sinatra::Cors
+
+  puts "CORS allow_origin: #{settings.allow_origin}"
+
+  # CORS Settings
+  set :allow_origin, 'http://localhost:3000'
+  set :allow_methods, 'GET,HEAD,POST,OPTIONS'
+  set :allow_headers, 'content-type,if-modified-since,authorization,X-Requested-With'
+  set :expose_headers, 'location,link'
+
   before do
     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,HEAD,POST,OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
   end
 
+  
+  # Handle preflight OPTIONS requests
   options '*' do
-    response.headers['Allow'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Origin'] = settings.allow_origin
+    response.headers['Access-Control-Allow-Methods'] = settings.allow_methods
+    response.headers['Access-Control-Allow-Headers'] = settings.allow_headers
     200
   end
 
+  # Root route
+  get '/' do
+    content_type 'text/html'
+    '<h1>Hi This is Root</h1>'
+  end
+
+  # PDF generation route
   post '/generate-pdf' do
+    puts 'Hello'
     content_type 'application/json'
 
     begin
@@ -30,17 +53,26 @@ class PDFService < Sinatra::Base
       pdf.move_down 20
 
       grouped_responses.each do |question_id, question_group|
-        pdf.text "Question: #{question_group['question']['text']}", size: 12, style: :bold
+        question = question_group['question']
+        question_text = question['text']
+        question_type = question['type']
+
+        pdf.text question_text.to_s, size: 12, style: :bold
         pdf.move_down 10
 
-        question_group['responses'].each do |response|
-          user = response['user']
-          answer_text = response['answer'] || 
-                        (response['optionAnswers']&.map { |opt| opt['value'] }&.join(', ') || 'N/A')
+        if question_type == 'content' || question_type == 'heading'
+          pdf.move_down 20
+          next
+        else
+          question_group['responses'].each do |response|
+            user = response['user']
+            answer_text = response['answer'] ||
+                          (response['optionAnswers']&.map { |opt| opt['value'] }&.join(', ') || 'N/A')
 
-          pdf.text "User: #{user['username']} (ID: #{user['id']})", size: 10
-          pdf.text "Answer: #{answer_text}", size: 10
-          pdf.move_down 15
+            pdf.text "User: #{user['username']} (ID: #{user['id']})", size: 10
+            pdf.text "Answer: #{answer_text}", size: 10
+            pdf.move_down 15
+          end
         end
 
         pdf.move_down 20

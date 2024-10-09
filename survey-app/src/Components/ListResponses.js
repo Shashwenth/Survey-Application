@@ -113,14 +113,20 @@ const ListResponses = () => {
         {Object.values(groupedResponses).length === 0 ? (
           <p className="text-center text-gray-200">No responses yet.</p>
         ) : (
-          Object.values(groupedResponses).map((questionGroup) => (
+          Object.values(groupedResponses)
+          .filter(
+            (questionGroup) =>
+              questionGroup.question.type === 'text' ||
+              questionGroup.question.type === 'checkbox'
+          )
+          .map((questionGroup) => (
             <div key={questionGroup.question.id} className="mb-8">
               <div className="bg-white shadow-md rounded-lg p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Question: {questionGroup.question.text}
                 </h3>
                 <div className="space-y-4">
-                  {questionGroup.responses.map((response) => (
+                  {(questionGroup.question.type=="text" || questionGroup.question.type=="checkbox") && questionGroup.responses.map((response) => (
                     <div
                       key={response.id}
                       className="border-b border-gray-200 pb-4"
