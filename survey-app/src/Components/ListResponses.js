@@ -10,7 +10,7 @@ const ListResponses = () => {
     const fetchAnswers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/getResponses/${surveyId}`
+          `${process.env.REACT_APP_API_URL}/getResponses/${surveyId}`
         );
         // Group responses by question
         const grouped = response.data.reduce((acc, curr) => {
@@ -35,8 +35,9 @@ const ListResponses = () => {
   // Function to generate and download the PDF using the Ruby backend
   const generatePDF = async () => {
     try {
+      //console.log(`${process.env.RUBY_APP_API_URL}`);
       const response = await axios.post(
-        'http://localhost:4567/generate-pdf',
+        `https://pdf-service-latest-3he5.onrender.com/generate-pdf`,
         {
           surveyId: surveyId,
           groupedResponses: groupedResponses,
@@ -65,7 +66,7 @@ const ListResponses = () => {
   const previewPDF = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:4567/generate-pdf',
+        `https://pdf-service-latest-3he5.onrender.com/generate-pdf`,
         {
           surveyId: surveyId,
           groupedResponses: groupedResponses,

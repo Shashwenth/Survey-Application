@@ -14,7 +14,7 @@ const ExpiredSurveyList = () => {
     const fetchSurveys = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/Expiredusersurveys/${auth.user.id}`,
+          `${process.env.REACT_APP_API_URL}/Expiredusersurveys/${auth.user.id}`,
           {
             params: { page, size: 4 }, // Pagination params
           }

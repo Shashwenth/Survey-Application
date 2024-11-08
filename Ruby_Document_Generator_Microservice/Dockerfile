@@ -17,3 +17,7 @@ EXPOSE 4567
 
 # Define the command to run your app
 CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "4567"]
+
+# docker build -t pdf-service .
+# docker tag pdf-service shashwenth/pdf-service:latest
+# docker push shashwenth/pdf-service:latest

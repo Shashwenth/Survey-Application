@@ -9,8 +9,8 @@ const AddUser = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/addUser', { username, password });
-            console.log(response.data);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/addUser`, { username, password });
+            //console.log(response.data);
             setUsername('');
             setPassword('');
         } catch (error) {

@@ -1,0 +1,46 @@
+[
+    {
+        "answer": "ShashA",
+        "isOption": "false",
+        "option": null,
+        "question": {
+            "id": 1
+        },
+        "survey": {
+            "id": "1"
+        },
+        "user": {
+            "id": 1
+        }
+    },
+    {
+        "answer": "SHashB",
+        "isOption": "false",
+        "option": null,
+        "question": {
+            "id": 2
+        },
+        "survey": {
+            "id": "1"
+        },
+        "user": {
+            "id": 1
+        }
+    },
+    {
+        "answer": ",
+        "isOption": "true",
+        "option": {
+            "id": "3"
+        },
+        "question": {
+            "id": 3
+        },
+        "survey": {
+            "id": "1"
+        },
+        "user": {
+            "id": 1
+        }
+    }
+]

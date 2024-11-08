@@ -21,4 +21,6 @@ public class PasswordConfig {
     public static boolean checkPassword(String plainPassword, String hashedPassword) {
         return argon2.verify(hashedPassword, plainPassword.toCharArray());
     }
+    
+   
 }

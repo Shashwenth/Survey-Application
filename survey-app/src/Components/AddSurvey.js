@@ -41,7 +41,7 @@ const AddSurvey = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/addSurvey?userId=${auth.user.id}`,
+        `${process.env.REACT_APP_API_URL}/addSurvey?userId=${auth.user.id}`,
         survey
       );
       console.log(response.data);

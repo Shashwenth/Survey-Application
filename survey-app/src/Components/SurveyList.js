@@ -31,15 +31,15 @@ const SurveyList = () => {
     const fetchSurveys = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/usersurveys/${auth.user.id}`,
+          `${process.env.REACT_APP_API_URL}/usersurveys/${auth.user.id}`,
           {
             params: { page, size: 4 }, // Add pagination params here
           }
         );
         setSurveys(response.data.content); // Set the current page's surveys
         setTotalPages(response.data.totalPages !=0 ? response.data.totalPages : 1); // Set the total number of pages
-        console.log("Inside List");
-        console.log(totalPages)
+       // console.log("Inside List");
+        //console.log(totalPages)
       } catch (error) {
         console.error('There was an error fetching the surveys!', error);
       }
@@ -56,7 +56,7 @@ const SurveyList = () => {
 
   const handleEndNow = async (surveyId) => {
     try {
-      const response = await axios.post(`http://localhost:8080/EndNow/${surveyId}`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/EndNow/${surveyId}`);
       if (response.data) {
         setRefresh((prev) => !prev);
       }
@@ -76,15 +76,15 @@ const SurveyList = () => {
 
     const copyToClipboard = async (surveyId) => {
       try {
-        const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyId/${surveyId}`);
         var copyText =
           response.data.access !== 'Public'
-            ? `http://localhost:3000/#/AuthorizeAccess/${surveyId}`
-            : `http://localhost:3000/#/Respond/${surveyId}`;
+            ? `https://taupe-toffee-5512eb.netlify.app/#/AuthorizeAccess/${surveyId}`
+            : `https://taupe-toffee-5512eb.netlify.app/#/Respond/${surveyId}`;
 
         await navigator.clipboard.writeText(copyText);
         setCopiedSurveyId(surveyId); // Set the copied survey ID
-        console.log('Copied to clipboard:', copyText);
+        //console.log('Copied to clipboard:', copyText);
       } catch (error) {
         setCopiedSurveyId(null); // Reset if an error occurs
         console.error('Unable to copy to clipboard:', error);
@@ -184,7 +184,7 @@ const SurveyList = () => {
 
       {/* Pagination Controls */}
       <div className="flex justify-between items-center mt-6">
-      {console.log(page)}
+      
         <button
           className="px-4 py-2 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
           onClick={goToPreviousPage}

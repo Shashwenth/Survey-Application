@@ -9,13 +9,13 @@ class PDFService < Sinatra::Base
   puts "CORS allow_origin: #{settings.allow_origin}"
 
   # CORS Settings
-  set :allow_origin, 'http://localhost:3000'
+  set :allow_origin, 'https://taupe-toffee-5512eb.netlify.app'
   set :allow_methods, 'GET,HEAD,POST,OPTIONS'
   set :allow_headers, 'content-type,if-modified-since,authorization,X-Requested-With'
   set :expose_headers, 'location,link'
 
   before do
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Origin'] = 'https://taupe-toffee-5512eb.netlify.app'
     response.headers['Access-Control-Allow-Methods'] = 'GET,HEAD,POST,OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
   end
