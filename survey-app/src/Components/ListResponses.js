@@ -10,7 +10,7 @@ const ListResponses = () => {
     const fetchAnswers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/getResponses/${surveyId}`
+          `${process.env.REACT_APP_API_URL}/getResponses/${surveyId}`
         );
         // Group responses by question
         const grouped = response.data.reduce((acc, curr) => {
@@ -35,8 +35,9 @@ const ListResponses = () => {
   // Function to generate and download the PDF using the Ruby backend
   const generatePDF = async () => {
     try {
+      //console.log(`${process.env.RUBY_APP_API_URL}`);
       const response = await axios.post(
-        'http://localhost:4567/generate-pdf',
+        `https://pdf-service-latest-3he5.onrender.com/generate-pdf`,
         {
           surveyId: surveyId,
           groupedResponses: groupedResponses,
@@ -65,7 +66,7 @@ const ListResponses = () => {
   const previewPDF = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:4567/generate-pdf',
+        `https://pdf-service-latest-3he5.onrender.com/generate-pdf`,
         {
           surveyId: surveyId,
           groupedResponses: groupedResponses,
@@ -113,14 +114,20 @@ const ListResponses = () => {
         {Object.values(groupedResponses).length === 0 ? (
           <p className="text-center text-gray-200">No responses yet.</p>
         ) : (
-          Object.values(groupedResponses).map((questionGroup) => (
+          Object.values(groupedResponses)
+          .filter(
+            (questionGroup) =>
+              questionGroup.question.type === 'text' ||
+              questionGroup.question.type === 'checkbox'
+          )
+          .map((questionGroup) => (
             <div key={questionGroup.question.id} className="mb-8">
               <div className="bg-white shadow-md rounded-lg p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Question: {questionGroup.question.text}
                 </h3>
                 <div className="space-y-4">
-                  {questionGroup.responses.map((response) => (
+                  {(questionGroup.question.type=="text" || questionGroup.question.type=="checkbox") && questionGroup.responses.map((response) => (
                     <div
                       key={response.id}
                       className="border-b border-gray-200 pb-4"

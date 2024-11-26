@@ -15,7 +15,7 @@ const AddQuestions = () => {
   useEffect(() => {
     const fetchSurveyData = async () => {
       try {
-        const curr_response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+        const curr_response = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyId/${surveyId}`);
         setResponse(curr_response.data);
       } catch (error) {
         console.log(error);
@@ -47,7 +47,7 @@ const AddQuestions = () => {
       options: options.filter((o) => o !== '').map((option) => ({ value: option })),
     };
     try {
-      await axios.post(`http://localhost:8080/addQuestion/${surveyId}`, question);
+      await axios.post(`${process.env.REACT_APP_API_URL}/addQuestion/${surveyId}`, question);
       setText('');
       setType('text');
       setOptions(['']);

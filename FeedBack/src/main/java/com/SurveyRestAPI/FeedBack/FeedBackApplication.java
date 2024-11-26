@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class FeedBackApplication {
 
 	public static void main(String[] args) {
+		//Dotenv dotenv = Dotenv.load();
 		SpringApplication.run(FeedBackApplication.class, args);
 	}
 

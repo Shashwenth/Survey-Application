@@ -18,7 +18,7 @@ const AuthorizeAccess = () => {
             return;
         }
         try {
-            const response = await axios.get(`http://localhost:8080/getSurveyUniqueId/${surveyId}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyUniqueId/${surveyId}`);
             if(response.data===pass){
                 navigate(`/Respond/${surveyId}`);
             }

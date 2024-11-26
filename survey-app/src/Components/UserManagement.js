@@ -13,7 +13,7 @@ const UserManagement = () => {
     
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/users'); // Update this endpoint if needed
+            const response = await axios.get('${process.env.REACT_APP_API_URL}/users'); // Update this endpoint if needed
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -24,7 +24,7 @@ const UserManagement = () => {
         event.preventDefault();
         try {
             const newUser = { username, password };
-            await axios.post('http://localhost:8080/addUser', newUser);
+            await axios.post('${process.env.REACT_APP_API_URL}/addUser', newUser);
             fetchUsers();
             setUsername('');
             setPassword('');

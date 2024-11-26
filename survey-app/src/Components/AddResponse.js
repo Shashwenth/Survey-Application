@@ -13,7 +13,7 @@ export default function AddResponse() {
   useEffect(() => {
     const fetchSurveyData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyId/${surveyId}`);
         setSurvey(response.data);
       } catch (error) {
         console.error('There was an error fetching the survey!', error);
@@ -72,7 +72,7 @@ export default function AddResponse() {
 
     try {
       await axios.post(
-        `http://localhost:8080/submitResponse/${surveyId}?userId=${auth.user.id}`,
+        `${process.env.REACT_APP_API_URL}/submitResponse/${surveyId}?userId=${auth.user.id}`,
         formattedResponses,
         {
           headers: {
@@ -141,8 +141,8 @@ export default function AddResponse() {
                 )}
 
                 {question.type === 'content' && (
-                  <div className="bg-white p-4 rounded-md shadow-sm">
-                    <p className="text-gray-800">{question.text}</p>
+                  <div>
+                    <p className="text-gray-900">{question.text}</p>
                   </div>
                 )}
 

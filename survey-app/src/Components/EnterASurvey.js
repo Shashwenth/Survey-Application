@@ -17,10 +17,8 @@ const EnterSurvey = () => {
             return;
         }
         try {
-            console.log(auth.user.id);
-            console.log(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
-            const checkResponseEntry = await axios.get(`http://localhost:8080/searchAnswers/${surveyId}?userId=${auth.user.id}`);
-            const checkifExpired = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+            const checkResponseEntry = await axios.get(`${process.env.REACT_APP_API_URL}/searchAnswers/${surveyId}?userId=${auth.user.id}`);
+            const checkifExpired = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyId/${surveyId}`);
             
             if(checkResponseEntry.data){
                 alert("You Have Already Responded to The Survey. Sorry we do not have editing feature currently!");
@@ -35,7 +33,7 @@ const EnterSurvey = () => {
                 alert("The Form You are Trying to Enter Not active Yet. Visit Later.");
             }
             else{
-                const response = await axios.get(`http://localhost:8080/getSurveyId/${surveyId}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/getSurveyId/${surveyId}`);
 
             if(response.data.access==="Public"){
                 navigate(`/Respond/${surveyId}`);

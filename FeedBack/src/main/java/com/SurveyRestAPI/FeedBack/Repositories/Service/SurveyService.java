@@ -1,6 +1,8 @@
 package com.SurveyRestAPI.FeedBack.Repositories.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ public class SurveyService {
 	@Scheduled(fixedRate = 6000)
 	public void updateSurveyStatus() {
 		List<Survey> surveys = surveyRepository.findAll();
-        LocalDateTime now = LocalDateTime.now();
+		OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         
         for (Survey survey : surveys) {
             if ("active".equals(survey.getStatus()) && survey.getEndTime().isBefore(now)) {
@@ -32,7 +34,7 @@ public class SurveyService {
 	@Scheduled(fixedRate = 6000)
 	public void setStatusActive() {
 		List<Survey> surveys = surveyRepository.findAll();
-        LocalDateTime now = LocalDateTime.now();
+		OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         
         for (Survey survey : surveys) {
             if ("notStarted".equals(survey.getStatus()) && survey.getStartTime().isBefore(now)) {

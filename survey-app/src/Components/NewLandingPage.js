@@ -1,15 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import landingpagepic from '../CSS/landingPage.png'
 
 export default function Example() {
-  const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState(true); // State to control modal visibility
+  const navigate = useNavigate();
+
+  // Function to close the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="flex min-h-screen">
-      
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Attention!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              This web app currently does not support idempotency. Please click the button only once to avoid multiple requests. We are working on it.
+            </p>
+            <button
+              onClick={handleCloseModal}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="w-1/2">
         <img
           src={landingpagepic}
@@ -48,5 +73,5 @@ export default function Example() {
         </main>
       </div>
     </div>
-  )
+  );
 }

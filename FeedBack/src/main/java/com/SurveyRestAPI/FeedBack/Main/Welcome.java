@@ -1,6 +1,7 @@
 package com.SurveyRestAPI.FeedBack.Main;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,6 @@ import com.SurveyRestAPI.FeedBack.Repositories.OptionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.QuestionRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.SurveyRepository;
 import com.SurveyRestAPI.FeedBack.Repositories.UserRepository;
-import com.SurveyRestAPI.FeedBack.Repositories.Service.CustomerService;
 import com.SurveyRestAPI.FeedBack.Repositories.Service.GenerateSurveyId;
 import com.SurveyRestAPI.FeedBack.Security.PasswordConfig;
 
@@ -68,20 +68,28 @@ public class Welcome {
         return "Hi Shash";
     }
     
-    @PostMapping(path="/addSurvey")
-    public ResponseEntity<Survey> addSurvey(@RequestParam Long userId, @RequestBody Survey survey){
+    @PostMapping(path = "/addSurvey")
+    public ResponseEntity<Survey> addSurvey(@RequestParam Long userId, @RequestBody Survey survey) {
         if (userId == null) {
             return ResponseEntity.badRequest().body(null);
         }
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         survey.setUser(user);
-        LocalDateTime now = LocalDateTime.now();
-        if(survey.getStartTime().isBefore(now)) {
-            survey.setStatus("active");
-        }
-        if(survey.getStartTime().isAfter(now)) {
+
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
+        System.out.println("Current time (now): " + now);
+        System.out.println("Survey start time: " + survey.getStartTime());
+
+        if (survey.getStartTime().isAfter(now)) {
             survey.setStatus("notStarted");
+        } else if (!survey.getEndTime().isBefore(now)) {
+            survey.setStatus("active");
+        } else {
+            survey.setStatus("concluded");
         }
+
         survey.setUniqueId(generateSurveyId.generateRandomString(10));
         Survey create = surveyRepository.save(survey);
         return ResponseEntity.ok(create);
@@ -92,7 +100,8 @@ public class Welcome {
     public boolean StartsurveyNow(@PathVariable Long id) {
     	System.out.printf("Insid Start Now %d\n",id);
     	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
-    	survey.setStartTime(LocalDateTime.now());
+    	OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+    	survey.setStartTime(now);
     	survey.setStatus("active");
     	return true;
     }
@@ -102,7 +111,8 @@ public class Welcome {
     public boolean EndsurveyNow(@PathVariable Long id) {
     	System.out.printf("Inside END Now %d\n",id);
     	Survey survey= surveyRepository.findById(id).orElseThrow( ()-> new RuntimeException("unable to Find ID"));
-    	survey.setEndTime(LocalDateTime.now());
+    	OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+    	survey.setEndTime(now);
     	survey.setStatus("concluded");
     	return true;
     }
@@ -327,5 +337,6 @@ public class Welcome {
     	op_user.get().setPassword(us.getPassword());
     	return ResponseEntity.ok(op_user.orElseThrow(()->new RuntimeException("Email Not Valid")));   	
     }
+
     
 }

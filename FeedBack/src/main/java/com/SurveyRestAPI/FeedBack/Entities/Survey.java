@@ -1,6 +1,6 @@
 package com.SurveyRestAPI.FeedBack.Entities;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,11 +34,11 @@ public class Survey {
 	
 	private String access;
 	
-	private LocalDateTime startTime;
+	private OffsetDateTime startTime;
+
+    private OffsetDateTime endTime;
 	
-	private LocalDateTime endTime;
-	
-	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JsonManagedReference
 	private List<Question> questions;
 	
@@ -53,7 +54,7 @@ public class Survey {
 	
 	
 
-	public Survey(Long id, String name, String status, LocalDateTime startTime, LocalDateTime endTime,
+	public Survey(Long id, String name, String status, OffsetDateTime startTime, OffsetDateTime endTime,
 			List<Question> questions, User user) {
 		super();
 		this.id = id;
@@ -116,19 +117,19 @@ public class Survey {
 		this.status = status;
 	}
 
-	public LocalDateTime getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 
-	public LocalDateTime getEndTime() {
+	public OffsetDateTime getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(LocalDateTime endTime) {
+	public void setEndTime(OffsetDateTime endTime) {
 		this.endTime = endTime;
 	}
 

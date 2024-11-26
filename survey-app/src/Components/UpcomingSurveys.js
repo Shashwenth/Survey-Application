@@ -15,7 +15,7 @@ const UpcomingSurveyList = () => {
     const fetchSurveys = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/Upcomingusersurveys/${auth.user.id}`,
+          `${process.env.REACT_APP_API_URL}/Upcomingusersurveys/${auth.user.id}`,
           {
             params: { page, size: 4 }, // Pagination params
           }
@@ -34,7 +34,7 @@ const UpcomingSurveyList = () => {
 
   const startNow =async (surveyId) => {
         try{
-          const response= await axios.post(`http://localhost:8080/StartNow/${surveyId}`);
+          const response= await axios.post(`${process.env.REACT_APP_API_URL}/StartNow/${surveyId}`);
           if(response.data){
             setRefresh((prev) => !prev);
           }
@@ -113,7 +113,7 @@ const UpcomingSurveyList = () => {
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        {console.log(page)}
+       
         <button
           className="px-4 py-2 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
           onClick={goToPreviousPage}

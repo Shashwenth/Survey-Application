@@ -7,7 +7,7 @@ const PrivateRoute = ({ children }) => {
   const { auth } = useContext(AuthContext);
   const location = useLocation();
 
-  console.log('PrivateRoute auth:', auth);
+  //console.log('PrivateRoute auth:', auth);
 
   return auth.user ? (
     children

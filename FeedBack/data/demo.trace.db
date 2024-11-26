@@ -1320,3 +1320,95 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 50 more
+2024-10-20 13:51:34.682753-07:00 database: wrong user or password; user: "SA"
+org.h2.message.DbException: Wrong user name or password [28000-224]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.engine.Engine.openSession(Engine.java:154)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:343)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:125)
+	at org.h2.util.JdbcUtils.getConnection(JdbcUtils.java:288)
+	at org.h2.server.web.WebServer.getConnection(WebServer.java:811)
+	at org.h2.server.web.WebApp.login(WebApp.java:1039)
+	at org.h2.server.web.WebApp.process(WebApp.java:227)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:177)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name or password [28000-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 50 more
+2024-10-20 13:52:04.130907-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 13:52:04.178906-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 13:52:10.141041-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 13:52:10.148043-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 16:58:26.558941-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 16:58:26.597129-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:04:17.682135-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:04:17.702667-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:19:48.994025-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:19:49.029608-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:19:54.996558-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]
+2024-10-20 17:19:55.000591-07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SURVEY" not found; SQL statement:
+select s1_0.id,s1_0.access,s1_0.end_time,s1_0.name,s1_0.start_time,s1_0.status,s1_0.unique_id,s1_0.user_id from survey s1_0 [42102-224]

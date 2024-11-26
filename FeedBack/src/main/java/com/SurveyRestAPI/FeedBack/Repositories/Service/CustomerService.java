@@ -18,7 +18,12 @@ public class CustomerService {
 
     public User saveCustomer(User customer) {
         String encodedPassword = PasswordConfig.hashPassword(customer.getPassword());
+//        System.out.println("Initital");
+//        System.out.println(customer.getEmail());
+//        String encodedEmail= PasswordConfig.hashEmail(customer.getEmail());
+//        System.out.println(encodedEmail);
         customer.setPassword(encodedPassword);
+ //       customer.setEmail(encodedEmail);
         User newUser=customerJPA.save(customer);
         return newUser;
     }
