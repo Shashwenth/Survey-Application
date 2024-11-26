@@ -50,7 +50,9 @@ const Login = () => {
     };
 
     return (
-        <div className="bg-fuchsia-950 flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="bg-gray-200 flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+            
+            
             {loading && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-md shadow-lg flex items-center">
@@ -59,6 +61,9 @@ const Login = () => {
                     </div>
                 </div>
             )}
+            <div className='text-center p-4 m-4'>
+            <h2>You are just one step away...</h2>
+            </div>
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <div className="bg-neutral-50 py-8 px-6 shadow-lg rounded-lg sm:px-10">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

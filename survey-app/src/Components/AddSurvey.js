@@ -37,14 +37,14 @@ const AddSurvey = () => {
       endTime: endTimeUTC,
     };
 
-    console.log(survey);
+    //console.log(survey);
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/addSurvey?userId=${auth.user.id}`,
         survey
       );
-      console.log(response.data);
+      //console.log(response.data);
       setName('');
       setStartTime('');
       setEndTime('');
